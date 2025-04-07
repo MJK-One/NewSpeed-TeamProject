@@ -17,7 +17,6 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 public record ApiResponseDto<T>(
         LocalDateTime timestamp,                       // 요청 시각
         int statusCode,                                // HTTP 상태 코드 숫자 (예: 400)
-        HttpStatus httpStatus,                         // HTTP 상태 코드 문자열 (예: "BAD_REQUEST")
         @NonNull String message,                       // 응답 메시지
         String path,                                   // 요청 경로
         @JsonInclude(value = NON_NULL) T data          // 실제 응답 데이터 (nullable), null이면 JSON에서 제외됨
@@ -28,7 +27,6 @@ public record ApiResponseDto<T>(
         return ApiResponseDto.<T>builder()
                 .timestamp(LocalDateTime.now())
                 .statusCode(successCode.getHttpStatus().value())
-                .httpStatus(successCode.getHttpStatus())
                 .message(successCode.getMessage())
                 .path(path)
                 .data(data)
@@ -45,7 +43,6 @@ public record ApiResponseDto<T>(
         return ApiResponseDto.<T>builder()
                 .timestamp(LocalDateTime.now())
                 .statusCode(errorCode.getHttpStatus().value())
-                .httpStatus(errorCode.getHttpStatus())
                 .message(errorCode.getMessage())
                 .path(path)
                 .data(null)
@@ -57,7 +54,6 @@ public record ApiResponseDto<T>(
         return ApiResponseDto.<T>builder()
                 .timestamp(LocalDateTime.now())
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .httpStatus(HttpStatus.BAD_REQUEST)
                 .message(message)
                 .path(path)
                 .data(null)
