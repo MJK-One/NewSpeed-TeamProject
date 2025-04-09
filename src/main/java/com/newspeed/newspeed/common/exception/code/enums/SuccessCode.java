@@ -10,6 +10,7 @@ public enum SuccessCode {
 
     // 201 Created
     USER_SIGNUP_SUCCESS(HttpStatus.CREATED, "회원가입이 완료되었습니다."),
+    REQUEST_FRIEND_SUCCESS(HttpStatus.CREATED, "친구 요청이 완료되었습니다"),
 
     // 200 Ok
     GENERAL_SUCCESS(HttpStatus.OK, "테스트에 성공했습니다."),
