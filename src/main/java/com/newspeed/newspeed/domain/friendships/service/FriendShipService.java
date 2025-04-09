@@ -2,12 +2,16 @@ package com.newspeed.newspeed.domain.friendships.service;
 
 import com.newspeed.newspeed.domain.friendships.dto.request.HandleFriendShipRequest;
 import com.newspeed.newspeed.domain.friendships.dto.request.SendFriendShipRequest;
+import com.newspeed.newspeed.domain.friendships.dto.response.FriendSummary;
+import com.newspeed.newspeed.domain.friendships.dto.response.GetFriendShipsResponse;
 import com.newspeed.newspeed.domain.friendships.entity.Friendship;
 import com.newspeed.newspeed.domain.friendships.entity.value.Status;
 import com.newspeed.newspeed.domain.friendships.repository.FriendshipRepository;
 import com.newspeed.newspeed.domain.users.entity.User;
 import com.newspeed.newspeed.domain.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +26,10 @@ public class FriendShipService {
     private final UserRepository userRepository;
 
     public void sendRequest(SendFriendShipRequest request, Long userId) {
+        if(userId.equals(request.targetUserId())) {
+            throw new IllegalArgumentException("자기 자신에게는 친구 요청을 보낼 수 없습니다.");
+        }
+
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 ID 입니다."));
         User friend = userRepository.findById(request.targetUserId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 친구 ID 입니다."));
 
@@ -52,5 +60,16 @@ public class FriendShipService {
         }
 
         friendship.updateStatus(request.status());
+    }
+
+    public GetFriendShipsResponse getFriendships(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 ID 입니다."));
+        Page<FriendSummary> page = friendShipRepository.findAcceptedByConditions(userId, pageable);
+
+        return GetFriendShipsResponse.builder()
+                .friends(page.getContent())
+                .totalPageCount(page.getTotalPages())
+                .totalElementCount(page.getTotalElements())
+                .build();
     }
 }

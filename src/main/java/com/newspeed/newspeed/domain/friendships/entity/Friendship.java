@@ -1,24 +1,20 @@
 package com.newspeed.newspeed.domain.friendships.entity;
 
+import com.newspeed.newspeed.common.entity.BaseTimeEntity;
 import com.newspeed.newspeed.domain.users.entity.User;
 import com.newspeed.newspeed.domain.friendships.entity.value.Status;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Friendship {
+public class Friendship extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,14 +29,6 @@ public class Friendship {
 
     @Enumerated(EnumType.STRING)
     private Status status;
-
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     public void updateStatus(Status status) {
         this.status = status;
