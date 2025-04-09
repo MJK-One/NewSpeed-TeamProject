@@ -42,7 +42,7 @@ public class ProfileService {
         }
 
         //유저Dto 생성
-        OtherProfileUserDto otherProfileUserDto = new OtherProfileUserDto(user.getId(), user.getName(), friendStatus, friendCount, postCount);
+        OtherProfileUserDto otherProfileUserDto = new OtherProfileUserDto(user.getUserId(), user.getName(), friendStatus, friendCount, postCount);
 
         return new OtherProfileResponseDto(otherProfileUserDto, profilePostList);
     }
@@ -59,7 +59,7 @@ public class ProfileService {
         List<ProfilePostDto> profilePostList = convertPostToDtoList(userId);
 
         //유저Dto 생성
-        MyProfileUserDto myProfileUserDto = new MyProfileUserDto(user.getId(), user.getName(), user.getEmail(), friendCount, postCount);
+        MyProfileUserDto myProfileUserDto = new MyProfileUserDto(user.getUserId(), user.getName(), user.getEmail(), friendCount, postCount);
 
         return new MyProfileResponseDto(myProfileUserDto, profilePostList);
     }
