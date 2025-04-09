@@ -27,4 +27,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             countQuery= "select count (p) from Post p" )
     Page<Post> findNewsFeed(Pageable pageable);
 
+    @Query("select p from Post p where p.id = :postId and p.user.id = :userId")
+    Optional<Post> findByIdAndUserId(@Param("postId") Long postId, @Param("userId") Long userId);
+
 }
