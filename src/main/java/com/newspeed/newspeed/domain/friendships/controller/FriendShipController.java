@@ -3,6 +3,7 @@ package com.newspeed.newspeed.domain.friendships.controller;
 import com.newspeed.newspeed.common.response.ApiResponseDto;
 import com.newspeed.newspeed.domain.friendships.dto.request.HandleFriendShipRequest;
 import com.newspeed.newspeed.domain.friendships.dto.request.SendFriendShipRequest;
+import com.newspeed.newspeed.domain.friendships.dto.response.GetFriendShipRequestsResponse;
 import com.newspeed.newspeed.domain.friendships.dto.response.GetFriendShipsResponse;
 import com.newspeed.newspeed.domain.friendships.service.FriendShipService;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +45,11 @@ public class FriendShipController {
         return ApiResponseDto.success(GET_FRIENDSHIPS_SUCCESS, response,"/api/friendships");
     }
 
-
+    @GetMapping("/requests")
+    public ApiResponseDto<GetFriendShipRequestsResponse> getFriendshipRequests(@PageableDefault(size = 10, page = 0) Pageable pageable) {
+        //todo: 로그인 내용 Pull 이후 세션으로부터 유저 ID를 받아오는 로직 필요
+        Long userId = 1L;
+        GetFriendShipRequestsResponse response = friendShipService.getFriendshipRequests(userId, pageable);
+        return ApiResponseDto.success(GET_FRIENDSHIPREQUESTS_SUCCESS, response,"/api/friendships/requests");
+    }
 }

@@ -3,6 +3,7 @@ package com.newspeed.newspeed.domain.friendships.service;
 import com.newspeed.newspeed.domain.friendships.dto.request.HandleFriendShipRequest;
 import com.newspeed.newspeed.domain.friendships.dto.request.SendFriendShipRequest;
 import com.newspeed.newspeed.domain.friendships.dto.response.FriendSummary;
+import com.newspeed.newspeed.domain.friendships.dto.response.GetFriendShipRequestsResponse;
 import com.newspeed.newspeed.domain.friendships.dto.response.GetFriendShipsResponse;
 import com.newspeed.newspeed.domain.friendships.entity.Friendship;
 import com.newspeed.newspeed.domain.friendships.entity.value.Status;
@@ -67,6 +68,17 @@ public class FriendShipService {
         Page<FriendSummary> page = friendShipRepository.findAcceptedByConditions(userId, pageable);
 
         return GetFriendShipsResponse.builder()
+                .friends(page.getContent())
+                .totalPageCount(page.getTotalPages())
+                .totalElementCount(page.getTotalElements())
+                .build();
+    }
+
+    public GetFriendShipRequestsResponse getFriendshipRequests(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 ID 입니다."));
+        Page<FriendSummary> page = friendShipRepository.findPendingByConditions(userId, pageable);
+
+        return GetFriendShipRequestsResponse.builder()
                 .friends(page.getContent())
                 .totalPageCount(page.getTotalPages())
                 .totalElementCount(page.getTotalElements())

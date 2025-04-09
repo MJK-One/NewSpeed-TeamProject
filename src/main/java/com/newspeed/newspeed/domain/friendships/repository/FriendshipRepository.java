@@ -30,4 +30,21 @@ public interface FriendshipRepository extends JpaRepository<Friendship,Long> {
                   AND (f.followFrom.userId = :userId OR f.followTo.userId = :userId)
             """)
     Page<FriendSummary> findAcceptedByConditions(Long userId, Pageable pageable);
+
+    @Query("""
+                SELECT new com.newspeed.newspeed.domain.friendships.dto.response.FriendSummary(
+                    CASE 
+                        WHEN f.followFrom.userId = :userId THEN f.followTo.userId
+                        ELSE f.followFrom.userId
+                    END,
+                    CASE 
+                        WHEN f.followFrom.userId = :userId THEN f.followTo.name
+                        ELSE f.followFrom.name
+                    END
+                )
+                FROM Friendship f
+                WHERE f.status = 'PENDING'
+                  AND (f.followFrom.userId = :userId OR f.followTo.userId = :userId)
+            """)
+    Page<FriendSummary> findPendingByConditions(Long userId, Pageable pageable);
 }
