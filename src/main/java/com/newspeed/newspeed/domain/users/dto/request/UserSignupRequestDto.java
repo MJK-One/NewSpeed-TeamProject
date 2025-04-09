@@ -4,8 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-import java.time.LocalDateTime;
-
 public record UserSignupRequestDto(
         @NotBlank(message = "유저 이름은 필수입니다.")
         @Size(max = 4, message = "최대 4글자까지 가능합니다.")

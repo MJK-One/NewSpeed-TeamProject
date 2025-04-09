@@ -42,9 +42,6 @@ public class UserService {
                 .password(encodedPassword)
                 .build();  // 빌드 호출
 
-        userRepository.save(user);
-
-        HttpSession httpSession = httpServletRequest.getSession(true);  // 새로운 세션 생성
         userRepository.save(user); // 로그인 한 건 아니므로 세션 저장은 X
     }
 
