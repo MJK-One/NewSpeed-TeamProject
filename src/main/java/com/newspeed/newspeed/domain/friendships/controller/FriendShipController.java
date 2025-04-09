@@ -30,7 +30,7 @@ public class FriendShipController {
     }
 
     @PatchMapping("/{requestId}")
-    public ApiResponseDto<Void> handleRequest(@PathVariable Long requestId, @RequestBody @Validated HandleFriendShipRequest request) {
+    public ApiResponseDto<Void> handleRequest(@PathVariable(name = "requestId") Long requestId, @RequestBody @Validated HandleFriendShipRequest request) {
         //todo: 로그인 내용 Pull 이후 세션으로부터 유저 ID를 받아오는 로직 필요
         Long userId = 1L;
         friendShipService.handleRequest(userId, requestId, request);
