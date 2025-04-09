@@ -22,8 +22,7 @@ public class ProfileController {
     @GetMapping("/{userId}")
     public ApiResponseDto<OtherProfileResponseDto> findProfileById(
             @PathVariable Long userId,
-            @SessionAttribute(value = "loginUser") User user
-            //TODO: 세션명 통일, 세션에 뭐가 저장됐는지 확인하고 User 바꿔야 함
+            @SessionAttribute(value = "user") User user
     ) {
         return ApiResponseDto.success(SuccessCode.GENERAL_SUCCESS, profileService.findProfileById(userId, user.getId()), "/api/profiles/"+userId);
     }
@@ -31,7 +30,7 @@ public class ProfileController {
     //내 프로필 조회
     @GetMapping("/my")
     public ApiResponseDto<MyProfileResponseDto> findMyProfileById(
-            @SessionAttribute(value = "loginUser") User user
+            @SessionAttribute(value = "user") User user
     ) {
         return ApiResponseDto.success(SuccessCode.GENERAL_SUCCESS, profileService.findMyProfileById(user.getId()), "/api/profiles/my");
     }
@@ -40,7 +39,7 @@ public class ProfileController {
     @PatchMapping
     public ApiResponseDto<Void> updateProfile(
             @RequestBody ProfileRequestDto requestDto,
-            @SessionAttribute(value = "loginUser") User user
+            @SessionAttribute(value = "user") User user
     ){
         return profileService.updateProfile(requestDto, user.getId());
     }
