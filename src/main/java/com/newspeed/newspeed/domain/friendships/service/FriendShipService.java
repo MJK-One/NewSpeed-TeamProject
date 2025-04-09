@@ -1,5 +1,6 @@
 package com.newspeed.newspeed.domain.friendships.service;
 
+import com.newspeed.newspeed.domain.friendships.dto.request.HandleFriendShipRequest;
 import com.newspeed.newspeed.domain.friendships.dto.request.SendFriendShipRequest;
 import com.newspeed.newspeed.domain.friendships.entity.Friendship;
 import com.newspeed.newspeed.domain.friendships.entity.value.Status;
@@ -21,16 +22,8 @@ public class FriendShipService {
     private final UserRepository userRepository;
 
     public void sendRequest(SendFriendShipRequest request, Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        Optional<User> friend = userRepository.findById(request.targetUserId());
-
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 유저 ID 입니다.");
-        }
-
-        if (friend.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 친구 ID 입니다.");
-        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 ID 입니다."));
+        User friend = userRepository.findById(request.targetUserId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 친구 ID 입니다."));
 
         Optional<Friendship> friendship = friendShipRepository.findByUserAndFriendId(userId, request.targetUserId());
         if(friendship.isPresent()) {
@@ -38,11 +31,26 @@ public class FriendShipService {
         }
 
         Friendship newFriendship = Friendship.builder()
-                .followFrom(user.get())
-                .followTo(friend.get())
+                .followFrom(user)
+                .followTo(friend)
                 .status(Status.PENDING)
                 .build();
 
         friendShipRepository.save(newFriendship);
+    }
+
+    public void handleRequest(Long userId, Long requestId, HandleFriendShipRequest request) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 ID 입니다."));
+        Friendship friendship = friendShipRepository.findById(requestId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 친구 요청 ID 입니다."));
+
+        if(!friendship.getFollowTo().equals(user)) {
+            throw new IllegalArgumentException("사용자의 친구 요청이 아닙니다.");
+        }
+
+        if(request.status() == Status.PENDING) {
+            throw new IllegalArgumentException("변경은 수락, 거절만 가능합니다.");
+        }
+
+        friendship.updateStatus(request.status());
     }
 }

@@ -3,6 +3,7 @@ package com.newspeed.newspeed.domain.friendships.entity;
 import com.newspeed.newspeed.domain.users.entity.User;
 import com.newspeed.newspeed.domain.friendships.entity.value.Status;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,4 +41,8 @@ public class Friendship {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }
