@@ -27,7 +27,6 @@ public class PostLike extends BaseTime{
         this.post = post;
     }
 
-
     public static PostLike of(User user, Post post) {
         return PostLike.builder()
                 .user(user)

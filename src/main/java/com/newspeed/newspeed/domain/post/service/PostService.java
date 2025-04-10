@@ -13,4 +13,7 @@ public interface PostService {
     List<PostResponseDto> getNewsFeed(int page, int size);
     PostResponseDto updatePost(Long id,PostRequestDto dto, Long userId);
     void deletePost(Long id, Long userId);
+
+    //좋아요 기능
+    void toggleLike(Long postId, Long userId);
 }

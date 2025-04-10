@@ -16,10 +16,13 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
+    /**
+    * 게시글 작성
+    * */
     @PostMapping
     public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto requestDto,
                                                       @SessionAttribute("userId") Long userId) {
-        PostResponseDto responseDto = postService.createPost(requestDto, userId); // ✅ 올바른 메서드 이름
+        PostResponseDto responseDto = postService.createPost(requestDto, userId);
         return ResponseEntity.ok(responseDto);
     }
     /**
@@ -59,5 +62,14 @@ public class PostController {
                                            @SessionAttribute("userId") Long userId) {
         postService.deletePost(postId, userId);
         return ResponseEntity.noContent().build();
+    }
+    /**
+     * 좋아요
+     */
+    @PostMapping("/{postId}/like")
+    public ResponseEntity<Void> toggleLike(@PathVariable Long postId,
+                                           @SessionAttribute("userId") Long userId) {
+        postService.toggleLike(postId, userId);
+        return ResponseEntity.ok().build();
     }
 }
