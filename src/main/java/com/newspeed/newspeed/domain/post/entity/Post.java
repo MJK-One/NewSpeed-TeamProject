@@ -1,10 +1,13 @@
 package com.newspeed.newspeed.domain.post.entity;
 
 
-import com.newspeed.newspeed.common.entity.BaseTime;
+
+import com.newspeed.newspeed.common.entity.BaseTimeEntity;
+import com.newspeed.newspeed.domain.users.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "post")
-public class Post extends BaseTime {
+public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
@@ -44,8 +47,10 @@ public class Post extends BaseTime {
         this.content = content;
         this.image = image;
     }
-
-
+    //테스트용
+    public void forceSetUpdatedAt(LocalDateTime updatedAt) {
+        this.getUpdatedAt();
+    }
 
 
 }

@@ -8,10 +8,12 @@ import com.newspeed.newspeed.domain.post.dto.request.PostRequestDto;
 import com.newspeed.newspeed.domain.post.dto.response.PostResponseDto;
 import com.newspeed.newspeed.domain.post.entity.Post;
 import com.newspeed.newspeed.domain.post.entity.PostLike;
-import com.newspeed.newspeed.domain.post.entity.User;
+
 import com.newspeed.newspeed.domain.post.repository.PostLikeRepository;
 import com.newspeed.newspeed.domain.post.repository.PostRepository;
-import com.newspeed.newspeed.domain.post.repository.UserRepository;
+
+import com.newspeed.newspeed.domain.users.entity.User;
+import com.newspeed.newspeed.domain.users.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -93,7 +95,7 @@ public class PostService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
-        if (post.getUser().getId().equals(userId)) {
+        if (post.getUser().getUserId().equals(userId)) {
             throw new CustomException(ErrorCode.SELF_LIKE_NOT_ALLOWED);
         }
 

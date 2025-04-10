@@ -1,6 +1,7 @@
 package com.newspeed.newspeed.domain.post.entity;
 
 import com.newspeed.newspeed.domain.post.dto.request.PostLikeRequestDto;
+import com.newspeed.newspeed.domain.users.entity.User;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,7 @@ class PostTest {
                 .likeCount(0)
                 .build();
 
-        PostLike postLike =  new PostLikeRequestDto(user.getId(), post.getId()).toEntity(user, post);
+        PostLike postLike =  new PostLikeRequestDto(user.getUserId(), post.getId()).toEntity(user, post);
 
 
         //when

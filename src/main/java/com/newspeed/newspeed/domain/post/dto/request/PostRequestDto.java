@@ -1,7 +1,8 @@
 package com.newspeed.newspeed.domain.post.dto.request;
 
 import com.newspeed.newspeed.domain.post.entity.Post;
-import com.newspeed.newspeed.domain.post.entity.User;
+
+import com.newspeed.newspeed.domain.users.entity.User;
 import jakarta.validation.constraints.NotBlank;
 
 

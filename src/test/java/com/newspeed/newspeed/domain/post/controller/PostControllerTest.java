@@ -3,8 +3,9 @@ package com.newspeed.newspeed.domain.post.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newspeed.newspeed.domain.post.dto.request.PostRequestDto;
 import com.newspeed.newspeed.domain.post.entity.Post;
-import com.newspeed.newspeed.domain.post.entity.User;
-import com.newspeed.newspeed.domain.post.repository.UserRepository;
+
+import com.newspeed.newspeed.domain.users.entity.User;
+import com.newspeed.newspeed.domain.users.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +41,7 @@ class PostControllerTest {
         em.persist(user);
 
         session = new MockHttpSession();
-        session.setAttribute("userId", user.getId());
+        session.setAttribute("userId", user.getUserId());
 
         em.flush();
         em.clear();
@@ -113,7 +114,7 @@ class PostControllerTest {
                 .build();
         em.persist(post);
 
-        session.setAttribute("userId", liker.getId());
+        session.setAttribute("userId", liker.getUserId());
 
         mockMvc.perform(post("/api/posts/" + post.getId() + "/like")
                         .session(session))
@@ -142,7 +143,7 @@ class PostControllerTest {
         em.persist(liker);
 
         MockHttpSession session = new MockHttpSession();
-        session.setAttribute("userId", liker.getId());
+        session.setAttribute("userId", liker.getUserId());
 
         mockMvc.perform(post("/api/posts/" + nonExistPostId + "/like")
                         .session(session))

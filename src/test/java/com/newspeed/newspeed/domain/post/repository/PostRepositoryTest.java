@@ -1,7 +1,8 @@
 package com.newspeed.newspeed.domain.post.repository;
 
 import com.newspeed.newspeed.domain.post.entity.Post;
-import com.newspeed.newspeed.domain.post.entity.User;
+
+import com.newspeed.newspeed.domain.users.entity.User;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

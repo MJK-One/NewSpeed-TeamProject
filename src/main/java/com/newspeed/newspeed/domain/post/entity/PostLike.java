@@ -1,6 +1,8 @@
 package com.newspeed.newspeed.domain.post.entity;
 
-import com.newspeed.newspeed.common.entity.BaseTime;
+
+import com.newspeed.newspeed.common.entity.BaseTimeEntity;
+import com.newspeed.newspeed.domain.users.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +12,7 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @Table(name = "post_like")
-public class PostLike extends BaseTime {
+public class PostLike extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

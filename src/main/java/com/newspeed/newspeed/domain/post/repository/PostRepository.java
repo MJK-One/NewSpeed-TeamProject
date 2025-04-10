@@ -28,7 +28,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 //            countQuery = "select count (p) from Post p")
 //    Page<Post> findNewsFeed(Pageable pageable);
 
-    @Query("select p from Post p where p.id = :postId and p.user.id = :userId")
+    @Query("select p from Post p where p.id = :postId and p.user.userId = :userId")
     Optional<Post> findByIdAndUserId(@Param("postId") Long id,@Param("userId") Long userId);
 
     // 시작일 조건이 없으면 필터 안함, 있으면 이후 조회
