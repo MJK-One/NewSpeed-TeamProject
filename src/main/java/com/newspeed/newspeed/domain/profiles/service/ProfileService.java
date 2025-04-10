@@ -28,6 +28,7 @@ public class ProfileService {
     private final PasswordEncoder passwordEncoder;
 
     //타인 프로필 조회
+    @Transactional(readOnly = true)
     public OtherProfileResponseDto findProfileById(Long userId, Long currentUserId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
@@ -62,6 +63,7 @@ public class ProfileService {
     }
 
     //내 프로필 조회
+    @Transactional(readOnly = true)
     public MyProfileResponseDto findMyProfileById(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
