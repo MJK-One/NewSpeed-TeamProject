@@ -22,13 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class FriendShipService {
 
     private final FriendshipRepository friendShipRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public void sendRequest(SendFriendShipRequest request, Long userId) {
         if(userId.equals(request.targetUserId())) {
             throw new CustomException(ErrorCode.NOT_ALLOW_REQUEST_MYSELF);
@@ -51,6 +51,7 @@ public class FriendShipService {
         friendShipRepository.save(newFriendship);
     }
 
+    @Transactional
     public void handleRequest(Long userId, Long requestId, HandleFriendShipRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Friendship friendship = friendShipRepository.findById(requestId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 친구 요청 ID 입니다."));
@@ -66,6 +67,7 @@ public class FriendShipService {
         friendship.updateStatus(request.status());
     }
 
+    @Transactional(readOnly = true)
     public GetFriendShipsResponse getFriendships(Long userId, Pageable pageable) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Page<FriendSummary> page = friendShipRepository.findAcceptedByConditions(userId, pageable);
@@ -77,6 +79,7 @@ public class FriendShipService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public GetFriendShipRequestsResponse getFriendshipRequests(Long userId, Pageable pageable) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Page<FriendSummary> page = friendShipRepository.findPendingByConditions(userId, pageable);
