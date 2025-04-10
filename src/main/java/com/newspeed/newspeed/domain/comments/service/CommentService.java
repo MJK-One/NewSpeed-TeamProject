@@ -1,7 +1,7 @@
 package com.newspeed.newspeed.domain.comments.service;
 
 import com.newspeed.newspeed.domain.comments.dto.request.*;
-import com.newspeed.newspeed.domain.comments.dto.response.CommentResponseDto;
+import com.newspeed.newspeed.domain.comments.dto.response.*;
 import com.newspeed.newspeed.domain.comments.entity.*;
 import com.newspeed.newspeed.domain.comments.repository.*;
 import com.newspeed.newspeed.domain.users.entity.User;
@@ -28,21 +28,29 @@ public class CommentService {
     }
 
     @Transactional
-    // 댓글 생성
-    public Comment createComment(Long userId, Long postId, CommentRequestDto requestDto) {
-            // 1. 사용자 인증 및 게시글 존재 확인
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    public CreateCommentResponseDto createComment(Long userId, Long postId, CreateCommentRequestDto requestDto) {
+        // 1. 사용자 인증 및 게시글 존재 확인
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
-            Post post = postRepository.findById(postId)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
 
-            // 2. 댓글 생성
-            Comment comment = new Comment(user, post, requestDto.getCommentText());
-            comment.setCommentLikes(0); // 좋아요 개수 0 초기화
+        // 2. 댓글 생성
+        Comment comment = new Comment(user, post, requestDto.getCommentText());
+        comment.setCommentLikes(0); // 좋아요 개수 0 초기화
 
-            // 3. 댓글 저장
-            return commentRepository.save(comment);
+        // 3. 댓글 저장
+        Comment savedComment = commentRepository.save(comment);
+
+        // 4. CreateCommentResponseDto 생성 및 반환
+        return new CreateCommentResponseDto(
+                savedComment.getId(),
+                savedComment.getUser().getUserId(),
+                savedComment.getPost().getId(),
+                savedComment.getCommentText(),
+                savedComment.getCommentLikes()
+        );
     }
 
 
@@ -63,9 +71,6 @@ public class CommentService {
 
         // 3. 댓글 내용 수정
         comment.setCommentText(requestDto.getCommentText());
-
-        // 4. 변경 사항 저장
-        commentRepository.save(comment);
     }
 
     @Transactional
@@ -97,7 +102,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
 
-        if (commentLikeRepository.existsByComment_IdAndUser_Id(commentId, userId)) {
+        if (commentLikeRepository.existsByCommentIdAndUserId(commentId, userId)) {
             throw new IllegalStateException("이미 좋아요를 누른 댓글입니다.");
         }
 
@@ -122,12 +127,12 @@ public class CommentService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
 
         // 2. 댓글 좋아요 유무 확인
-        if (!commentLikeRepository.existsByComment_IdAndUser_Id(userId, commentId)) {
+        if (!commentLikeRepository.existsByCommentIdAndUserId(userId, commentId)) {
             throw new IllegalStateException("좋아요를 누르지 않은 댓글입니다.");
         }
 
         // 3. 좋아요 삭제
-        commentLikeRepository.deleteByComment_IdAndUser_Id(userId, commentId);
+        commentLikeRepository.deleteByCommentIdAndUserId(userId, commentId);
 
         // 4. Comment 엔티티의 commentLikes 값 감소
         comment.setCommentLikes(comment.getCommentLikes() - 1);

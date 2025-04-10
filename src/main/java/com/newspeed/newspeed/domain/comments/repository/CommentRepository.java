@@ -12,8 +12,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("SELECT " +
             "new com.newspeed.newspeed.domain.comments.dto.response.CommentResponseDto(" +
             "c.id, " +
-            "c.post.id, " +
-            "u.id, " +
+            "u.userId, " +
             "u.name, " +
             "c.commentText, " +
             "c.commentLikes) " +

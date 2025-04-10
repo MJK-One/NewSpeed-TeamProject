@@ -2,6 +2,7 @@ package com.newspeed.newspeed.domain.comments.entity;
 
 import com.newspeed.newspeed.common.entity.BaseTimeEntity;
 import com.newspeed.newspeed.domain.users.entity.User;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "Comment")
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class Comment extends BaseTimeEntity {
     @Id
@@ -30,7 +31,7 @@ public class Comment extends BaseTimeEntity {
     private String commentText;
 
     @Column(name = "likes", columnDefinition = "INT DEFAULT 0", nullable = false)
-    private Integer commentLikes;
+    private int commentLikes;
 
     // 생성자 추가
     public Comment(User user, Post post, String commentText) {
