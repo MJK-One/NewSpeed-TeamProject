@@ -50,7 +50,13 @@ public class ProfileService {
         }
 
         //유저Dto 생성
-        OtherProfileUserDto otherProfileUserDto = new OtherProfileUserDto(user.getUserId(), user.getName(), friendStatus, friendCount, postCount);
+        OtherProfileUserDto otherProfileUserDto = OtherProfileUserDto.builder()
+                .id(user.getUserId())
+                .name(user.getName())
+                .friendStatus(friendStatus)
+                .postCount(postCount)
+                .friendCount(friendCount)
+                .build();
 
         return new OtherProfileResponseDto(otherProfileUserDto, profilePostList);
     }
