@@ -12,9 +12,4 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     Optional<User> findById(Long id);
-
-    //아이디로 유저 찾기
-    default User findUserByIdOrElseThrow(Long id){
-        return findById(id).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
-    }
 }

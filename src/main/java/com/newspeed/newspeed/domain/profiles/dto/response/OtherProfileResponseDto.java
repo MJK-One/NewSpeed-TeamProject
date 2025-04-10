@@ -1,4 +1,4 @@
-package com.newspeed.newspeed.domain.profiles.dto;
+package com.newspeed.newspeed.domain.profiles.dto.response;
 
 import lombok.Getter;
 

@@ -1,6 +1,8 @@
 package com.newspeed.newspeed.domain.profiles.service;
 
 import com.newspeed.newspeed.common.config.PasswordEncoder;
+import com.newspeed.newspeed.common.exception.base.NotFoundException;
+import com.newspeed.newspeed.common.exception.code.enums.ErrorCode;
 import com.newspeed.newspeed.domain.comments.entity.Post;
 import com.newspeed.newspeed.domain.comments.repository.CommentRepository;
 import com.newspeed.newspeed.domain.comments.repository.PostRepository;
@@ -27,7 +29,7 @@ public class ProfileService {
 
     //타인 프로필 조회
     public OtherProfileResponseDto findProfileById(Long userId, Long currentUserId) {
-        User user = userRepository.findUserByIdOrElseThrow(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
         //친구, 게시글 수
         int friendCount = friendshipRepository.countFriendsByUserId(userId);
@@ -55,7 +57,7 @@ public class ProfileService {
 
     //내 프로필 조회
     public MyProfileResponseDto findMyProfileById(Long userId) {
-        User user = userRepository.findUserByIdOrElseThrow(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
         //친구, 게시글 수
         int friendCount = friendshipRepository.countFriendsByUserId(userId);
@@ -84,7 +86,7 @@ public class ProfileService {
     //프로필 수정
     @Transactional
     public boolean updateProfile(ProfileUpdateRequestDto requestDto, Long userId) {
-        User user = userRepository.findUserByIdOrElseThrow(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
         //이름과 이메일 업데이트
         user.updateInfo(requestDto.getName(), requestDto.getEmail());
