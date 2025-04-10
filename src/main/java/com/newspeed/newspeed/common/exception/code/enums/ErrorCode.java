@@ -26,6 +26,13 @@ public enum ErrorCode {
     // 409 - CONFLICT
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 사용 중인 이메일입니다."),
 
+    //친구 관련
+    ALREADY_EXIST_FRIENDSHIP(HttpStatus.BAD_REQUEST, "이미 존재하는 친구 요청입니다. (상태: %s)"),
+    NOT_ALLOW_REQUEST_MYSELF(HttpStatus.BAD_REQUEST,"자기 자신에게는 요청을 보낼 수 없습니다."),
+    FRIEND_NOT_FOUND(HttpStatus.BAD_REQUEST,"존재하지 않는 친구 요청 ID입니다."),
+    NOT_ALLOW_HANDLE_PENDING(HttpStatus.BAD_REQUEST,"요청 수락 혹은 거절만 가능합니다."),
+    NOT_YOUR_REQUEST(HttpStatus.BAD_REQUEST,"사용자의 친구 요청이 아닙니다."),
+
     // 404 - Not Found
     NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 API입니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다."),
@@ -37,5 +44,9 @@ public enum ErrorCode {
 
     private final HttpStatus httpStatus;
     private final String message;
+
+    public String getMessage(Object... args) {
+        return String.format(message, args);
+    }
 }
 
