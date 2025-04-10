@@ -1,6 +1,8 @@
 package com.newspeed.newspeed.common.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.newspeed.newspeed.common.exception.code.enums.ErrorCode;
 import com.newspeed.newspeed.common.response.ApiResponseDto;
 import jakarta.servlet.*;
@@ -51,9 +53,12 @@ public class LoginFilter implements Filter {
             );
 
             ObjectMapper objectMapper = new ObjectMapper();
-            String json = objectMapper.writeValueAsString(responseBody);
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
+            String json = objectMapper.writeValueAsString(responseBody); // 🔧 누락됐던 부분
             httpServletResponse.getWriter().write(json);
+
         }
     }
 
