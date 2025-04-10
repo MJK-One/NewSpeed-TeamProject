@@ -1,5 +1,8 @@
 package com.newspeed.newspeed.domain.friendships.service;
 
+import com.newspeed.newspeed.common.exception.base.CustomException;
+import com.newspeed.newspeed.common.exception.base.NotFoundException;
+import com.newspeed.newspeed.common.exception.code.enums.ErrorCode;
 import com.newspeed.newspeed.domain.friendships.dto.request.HandleFriendShipRequest;
 import com.newspeed.newspeed.domain.friendships.dto.request.SendFriendShipRequest;
 import com.newspeed.newspeed.domain.friendships.dto.response.FriendSummary;
@@ -28,15 +31,15 @@ public class FriendShipService {
 
     public void sendRequest(SendFriendShipRequest request, Long userId) {
         if(userId.equals(request.targetUserId())) {
-            throw new IllegalArgumentException("자기 자신에게는 친구 요청을 보낼 수 없습니다.");
+            throw new CustomException(ErrorCode.NOT_ALLOW_REQUEST_MYSELF);
         }
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 ID 입니다."));
-        User friend = userRepository.findById(request.targetUserId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 친구 ID 입니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+        User friend = userRepository.findById(request.targetUserId()).orElseThrow(() -> new NotFoundException(ErrorCode.FRIEND_NOT_FOUND));
 
         Optional<Friendship> friendship = friendShipRepository.findByUserAndFriendId(userId, request.targetUserId());
         if(friendship.isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 친구 요청입니다. (상태: " +friendship.get().getStatus() +")");
+            throw new CustomException(ErrorCode.ALREADY_EXIST_FRIENDSHIP,"PENDING");
         }
 
         Friendship newFriendship = Friendship.builder()
@@ -49,22 +52,22 @@ public class FriendShipService {
     }
 
     public void handleRequest(Long userId, Long requestId, HandleFriendShipRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 ID 입니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Friendship friendship = friendShipRepository.findById(requestId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 친구 요청 ID 입니다."));
 
         if(!friendship.getFollowTo().equals(user)) {
-            throw new IllegalArgumentException("사용자의 친구 요청이 아닙니다.");
+            throw new CustomException(ErrorCode.NOT_YOUR_REQUEST);
         }
 
         if(request.status() == Status.PENDING) {
-            throw new IllegalArgumentException("변경은 수락, 거절만 가능합니다.");
+            throw new CustomException(ErrorCode.NOT_ALLOW_HANDLE_PENDING);
         }
 
         friendship.updateStatus(request.status());
     }
 
     public GetFriendShipsResponse getFriendships(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 ID 입니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Page<FriendSummary> page = friendShipRepository.findAcceptedByConditions(userId, pageable);
 
         return GetFriendShipsResponse.builder()
@@ -75,7 +78,7 @@ public class FriendShipService {
     }
 
     public GetFriendShipRequestsResponse getFriendshipRequests(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 ID 입니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Page<FriendSummary> page = friendShipRepository.findPendingByConditions(userId, pageable);
 
         return GetFriendShipRequestsResponse.builder()
