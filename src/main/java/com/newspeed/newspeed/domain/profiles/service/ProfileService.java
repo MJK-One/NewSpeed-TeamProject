@@ -3,7 +3,7 @@ package com.newspeed.newspeed.domain.profiles.service;
 import com.newspeed.newspeed.common.exception.code.enums.ErrorCode;
 import com.newspeed.newspeed.common.exception.code.enums.SuccessCode;
 import com.newspeed.newspeed.common.response.ApiResponseDto;
-import com.newspeed.newspeed.domain.friends.repository.FriendRepository;
+import com.newspeed.newspeed.domain.friends.repository.FriendshipRepository;
 import com.newspeed.newspeed.domain.profiles.dto.*;
 import com.newspeed.newspeed.domain.users.entity.User;
 import com.newspeed.newspeed.domain.users.repository.UserRepository;
@@ -20,7 +20,7 @@ public class ProfileService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
-    private final FriendRepository friendRepository;
+    private final FriendshipRepository friendshipRepository;
     private final PasswordEncoder passwordEncoder;
 
     //타인 프로필 조회
@@ -28,7 +28,7 @@ public class ProfileService {
         User user = userRepository.findUserByIdOrElseThrow(userId);
 
         //친구, 게시글 수
-        int friendCount = friendRepository.countFriendsByUserId(userId);
+        int friendCount = friendshipRepository.countFriendsByUserId(userId);
         int postCount = postRepository.countByUserId(userId);
 
         //게시글 검색 후 Dto 리스트로 변경
@@ -39,7 +39,7 @@ public class ProfileService {
         if(currentUserId.equals(userId)){
             friendStatus = "ME";
         } else {
-            friendStatus = friendRepository.findStatusByUserIdAndProfileId(currentUserId, userId);
+            friendStatus = friendshipRepository.findStatusByUserIdAndProfileId(currentUserId, userId);
             if(friendStatus == null) {
                 friendStatus = "SEND REQUEST";
             }
@@ -56,7 +56,7 @@ public class ProfileService {
         User user = userRepository.findUserByIdOrElseThrow(userId);
 
         //친구, 게시글 수
-        int friendCount = friendRepository.countFriendsByUserId(userId);
+        int friendCount = friendshipRepository.countFriendsByUserId(userId);
         int postCount = postRepository.countByUserId(userId);
 
         //게시글 검색 후 Dto 리스트로 변경
@@ -95,6 +95,6 @@ public class ProfileService {
                 return ApiResponseDto.fail(ErrorCode.INVALID_PASSWORD, "/api/profiles");
             }
         }
-        return ApiResponseDto.success(SuccessCode.GENERAL_SUCCESS, "/api/profiles");
+        return ApiResponseDto.success(SuccessCode.USER_UPDATE_SUCCESS, "/api/profiles");
     }
 }
