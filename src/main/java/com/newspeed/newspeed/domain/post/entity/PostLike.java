@@ -23,15 +23,7 @@ public class PostLike extends BaseTime {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    //연관관계 편의 메서드를 위해 필요한 세터만 열었음
-    public void setPost(Post post) {
-        this.post = post;
-    }
 
-    public static PostLike of(User user, Post post) {
-        return PostLike.builder()
-                .user(user)
-                .post(post)
-                .build();
-    }
+
+
 }

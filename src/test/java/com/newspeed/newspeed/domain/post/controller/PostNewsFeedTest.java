@@ -38,11 +38,12 @@ public class PostNewsFeedTest {
         em.persist(user);
 
         List<Post> posts = new ArrayList<>();
-        posts.add(Post.createPost(user, "포스트 1", null)); // 좋아요 5
-        posts.add(Post.createPost(user, "포스트 2", null)); // 좋아요 10
-        posts.add(Post.createPost(user, "포스트 3", null)); // 좋아요 3
-        posts.add(Post.createPost(user, "포스트 4", null)); // 좋아요 8
-        posts.add(Post.createPost(user, "포스트 5", null)); // 좋아요 7
+        posts.add(Post.builder().user(user).content("포스트 1").image(null).likeCount(5).build());
+        posts.add(Post.builder().user(user).content("포스트 2").image(null).likeCount(10).build());
+        posts.add(Post.builder().user(user).content("포스트 3").image(null).likeCount(3).build());
+        posts.add(Post.builder().user(user).content("포스트 4").image(null).likeCount(8).build());
+        posts.add(Post.builder().user(user).content("포스트 5").image(null).likeCount(7).build());
+
 
         LocalDateTime base = LocalDateTime.of(2025, 4, 10, 0, 0);
         posts.get(0).setUpdatedAt(base.minusDays(1)); // 4/9

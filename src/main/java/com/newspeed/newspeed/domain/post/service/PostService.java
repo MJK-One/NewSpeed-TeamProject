@@ -3,6 +3,7 @@ package com.newspeed.newspeed.domain.post.service;
 import com.newspeed.newspeed.common.exception.base.CustomException;
 import com.newspeed.newspeed.common.exception.base.NotFoundException;
 import com.newspeed.newspeed.common.exception.code.enums.ErrorCode;
+import com.newspeed.newspeed.domain.post.dto.request.PostLikeRequestDto;
 import com.newspeed.newspeed.domain.post.dto.request.PostRequestDto;
 import com.newspeed.newspeed.domain.post.dto.response.PostResponseDto;
 import com.newspeed.newspeed.domain.post.entity.Post;
@@ -38,7 +39,7 @@ public class PostService {
     public PostResponseDto createPost(PostRequestDto dto, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Post post = Post.createPost(user, dto.getContent(), dto.getImage());
+        Post post = dto.toEntity(user);
         Post saved = postRepository.save(post);
         return PostResponseDto.from(saved);
     }
@@ -102,8 +103,8 @@ public class PostService {
             postLikeRepository.delete(like.get());
             post.decrementLikeCount();
         } else {
-            PostLike postLike = PostLike.of(user, post);
-
+            PostLikeRequestDto postLikeRequest = new PostLikeRequestDto(userId, postId);
+            PostLike postLike = postLikeRequest.toEntity(user, post);
             postLikeRepository.save(postLike);
             post.incrementLikeCount();
         }

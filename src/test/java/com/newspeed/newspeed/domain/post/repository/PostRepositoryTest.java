@@ -37,7 +37,13 @@ class PostRepositoryTest {
                 .build();
         em.persist(user);
 
-        Post post = Post.createPost(user, "test contents", "image.png");
+        Post post = Post.builder()
+                .user(user)
+                .content("test contents")
+                .image("image.png")
+                .likeCount(0)
+                .build();
+
         postRepository.save(post);
 
         //when

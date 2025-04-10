@@ -47,13 +47,5 @@ public class Post extends BaseTime {
 
 
 
-    public static Post createPost(User user, String content, String image) {
-        return Post.builder()
-                .user(user)
-                .content(content)
-                .image(image)
-                .likeCount(0)
-                .build();
-    }
 
 }
