@@ -9,11 +9,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 public class Friendship extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +29,13 @@ public class Friendship extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Builder
+    public Friendship(User followFrom, User followTo, Status status) {
+        this.followFrom = followFrom;
+        this.followTo = followTo;
+        this.status = status;
+    }
 
     public void updateStatus(Status status) {
         this.status = status;
