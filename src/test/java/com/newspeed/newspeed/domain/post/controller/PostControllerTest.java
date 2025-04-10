@@ -20,6 +20,10 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -49,13 +53,17 @@ class PostControllerTest {
     private ApplicationContext context;
     @BeforeEach
     void setUp() {
+        this.session = new MockHttpSession();
+
         user = User.builder()
                 .username("testuser")
                 .build();
         em.persist(user);
 
-        session = new MockHttpSession();
-        session.setAttribute("userId",19L);
+        session.setAttribute("userId", user.getId());
+
+        em.flush();
+        em.clear();
     }
     @Test
     void controllerExistCheck() {
@@ -200,9 +208,9 @@ class PostControllerTest {
 
         //when
         mockMvc.perform(post("/api/posts/" + nonExistPostId + "/like")
-                .session(session))
+                        .session(session))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("존재하지 않는 게시글입니다"));
+                .andExpect(jsonPath("$.message").value("존재하지 않는 게시글입니다."));
     }
 
     @Test
@@ -220,7 +228,7 @@ class PostControllerTest {
 
         //when
         mockMvc.perform(post("/api/posts/" + post.getId() + "/like")
-                .session(session))
+                        .session(session))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("본인 게시글에는 좋아요를 누를 수 없습니다."));
     }
@@ -240,7 +248,7 @@ class PostControllerTest {
 
         //when 좋아요 등록
         mockMvc.perform(post("/api/posts/" + post.getId() + "/like")
-                .session(session))
+                        .session(session))
                 .andExpect(status().isOk());
 
         em.flush();
@@ -251,12 +259,14 @@ class PostControllerTest {
 
         //when 좋아요 취소
         mockMvc.perform(post("/api/posts/" + post.getId() + "/like")
-                .session(session))
+                        .session(session))
                 .andExpect(status().isOk());
         em.flush();
         em.clear();
         Post unlikePost = em.find(Post.class, post.getId());
         assertThat(unlikePost.getLikeCount()).isEqualTo(0);
 
+
     }
+
 }

@@ -4,6 +4,7 @@ package com.newspeed.newspeed.domain.post.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class Post extends BaseTime{
         this.postLikes.add(postLike);
         postLike.setPost(this);
     }
+
 
     public static Post createPost(User user, String content, String image) {
         return Post.builder()

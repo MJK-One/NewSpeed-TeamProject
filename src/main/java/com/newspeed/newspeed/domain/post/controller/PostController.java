@@ -5,9 +5,11 @@ import com.newspeed.newspeed.domain.post.dto.response.PostResponseDto;
 import com.newspeed.newspeed.domain.post.entity.Post;
 import com.newspeed.newspeed.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -39,9 +41,12 @@ public class PostController {
      */
     @GetMapping
     public ResponseEntity<List<PostResponseDto>> getNewsFeed(@RequestParam(defaultValue = "0") int page,
-                                                             @RequestParam(defaultValue = "10") int size) {
-        List<PostResponseDto> responseDtoList = postService.getNewsFeed(page, size);
-        return ResponseEntity.ok(responseDtoList);
+                                                             @RequestParam(defaultValue = "10") int size,
+                                                             @RequestParam(defaultValue = "latest") String sort,
+                                                             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+        List<PostResponseDto> posts = postService.getNewsFeed(page, size, sort, startDate, endDate);
+        return ResponseEntity.ok(posts);
     }
     /**
      * 게시글 수정 (작성자만 가능)

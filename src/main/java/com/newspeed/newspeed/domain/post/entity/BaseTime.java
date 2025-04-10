@@ -20,4 +20,9 @@ public class BaseTime {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    // 테스트 용으로 세터 열었음
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

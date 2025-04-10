@@ -13,6 +13,7 @@ import com.newspeed.newspeed.domain.post.repository.PostRepository;
 import com.newspeed.newspeed.domain.post.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -20,12 +21,15 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Log4j2
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
@@ -63,13 +67,33 @@ public class PostServiceImpl implements PostService {
      * @return
      */
     @Override
-    public List<PostResponseDto> getNewsFeed(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Post> postPage = postRepository.findNewsFeed(pageable);
+    @Transactional
+    public List<PostResponseDto> getNewsFeed(int page, int size, String sort,
+                                             LocalDate startDate, LocalDate endDate) {
+        // 정렬 설정
+        Sort sorting = "like".equalsIgnoreCase(sort)
+                ? Sort.by(Sort.Direction.DESC, "likeCount") // 좋아요순
+                : Sort.by(Sort.Direction.DESC, "updatedAt"); // 최신순(기본)
+
+        Pageable pageable = PageRequest.of(page, size, sorting);
+
+        // 기간 조건 처리
+        LocalDateTime start = (startDate != null) ? startDate.atStartOfDay() : null;
+        LocalDateTime end = (endDate != null) ? endDate.plusDays(1).atStartOfDay() : null;
+        log.info("정렬 방식: {}", sort);
+        log.info("조회 기간: {} ~ {}", start, end);
+
+
+        //repository 호출
+        Page<Post> postPage = postRepository.findPostsByModifiedAtRange(start, end, pageable);
+
+
+        //dto 변환
         List<PostResponseDto> dtos = new ArrayList<>();
         for (Post post : postPage.getContent()) {
-            dtos.add(PostResponseDto.from(post));
+            dtos.add(new PostResponseDto(post));
         }
+
         return dtos;
     }
 

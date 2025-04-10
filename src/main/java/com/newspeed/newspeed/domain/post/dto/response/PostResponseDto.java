@@ -17,7 +17,14 @@ public class PostResponseDto {
     private int likeCount;
     private String username;
     private LocalDateTime createdAt;
-
+    public PostResponseDto(Post post) {
+        this.id = post.getId();
+        this.content = post.getContent();
+        this.image = post.getImage();
+        this.likeCount = post.getLikeCount();
+        this.username = post.getUser().getUsername();
+        this.createdAt = post.getCreatedAt();
+    }
     public static PostResponseDto from(Post post) {
         return PostResponseDto.builder()
                 .id(post.getId())
