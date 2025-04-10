@@ -15,14 +15,14 @@ public class PostResponseDto {
     private String content;
     private String image;
     private int likeCount;
-    private String username;
+    private String name;
     private LocalDateTime createdAt;
     public PostResponseDto(Post post) {
         this.id = post.getId();
         this.content = post.getContent();
         this.image = post.getImage();
         this.likeCount = post.getLikeCount();
-        this.username = post.getUser().getUsername();
+        this.name = post.getUser().getName();
         this.createdAt = post.getCreatedAt();
     }
     public static PostResponseDto from(Post post) {
@@ -31,7 +31,7 @@ public class PostResponseDto {
                 .content(post.getContent())
                 .image(post.getImage())
                 .likeCount(post.getLikeCount())
-                .username(post.getUser().getUsername())
+                .name(post.getUser().getName())
                 .createdAt(post.getCreatedAt())
                 .build();
     }

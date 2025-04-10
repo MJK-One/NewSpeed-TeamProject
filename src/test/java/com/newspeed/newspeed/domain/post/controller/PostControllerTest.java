@@ -56,7 +56,7 @@ class PostControllerTest {
         this.session = new MockHttpSession();
 
         user = User.builder()
-                .username("testuser")
+                .name("testuser")
                 .build();
         em.persist(user);
 
@@ -91,7 +91,7 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").value("테스트 게시글"))
                 .andExpect(jsonPath("$.image").value("test.png"))
-                .andExpect(jsonPath("$.username").value("testuser"));
+                .andExpect(jsonPath("$.name").value("testuser"));
 
     }
     @Test
@@ -118,7 +118,7 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").value("조회 테스트 게시글"))
                 .andExpect(jsonPath("$.image").value("img.png"))
-                .andExpect(jsonPath("$.username").value("testuser"));
+                .andExpect(jsonPath("$.name").value("testuser"));
     }
     @Test
     @DisplayName("게시글 수정 테스트")
@@ -159,10 +159,10 @@ class PostControllerTest {
     @Test
     @DisplayName("좋아요 등록 및 취소 토글 테스트")
     void toggleLikeTest() throws Exception {
-        User writer = User.builder().username("작성자").build();
+        User writer = User.builder().name("작성자").build();
         em.persist(writer);
 
-        User liker = User.builder().username("좋아요누를사람").build();
+        User liker = User.builder().name("좋아요누를사람").build();
         em.persist(liker);
 
         Post post = Post.createPost(writer, "좋아요 테스트", null);
@@ -199,7 +199,7 @@ class PostControllerTest {
     void toggleLikeNonExist() throws Exception {
         // given 존재하지 않는 아이디
         Long nonExistPostId = 9999L;
-        User liker = User.builder().username("좋아요누르는사람").build();
+        User liker = User.builder().name("좋아요누르는사람").build();
         em.persist(liker);
         em.flush();
 
@@ -217,7 +217,7 @@ class PostControllerTest {
     @DisplayName("본인 게시글 좋아요 누를 . 400 예외 발생")
     void toggleLikeOwnPost_throwBadRequest() throws Exception {
         //given
-        User user = User.builder().username("testuser").build();
+        User user = User.builder().name("testuser").build();
         em.persist(user);
         Post post = Post.createPost(user, "testuser", null);
         em.persist(post);
@@ -235,8 +235,8 @@ class PostControllerTest {
     @Test
     @DisplayName("좋아요 토글 테스트(등록->취소)")
     void toggleLike_addThenRemove() throws Exception {
-        User writer = User.builder().username("작성자").build();
-        User liker = User.builder().username("좋아요 누르는 사람").build();
+        User writer = User.builder().name("작성자").build();
+        User liker = User.builder().name("좋아요 누르는 사람").build();
         em.persist(writer);
         em.persist(liker);
 

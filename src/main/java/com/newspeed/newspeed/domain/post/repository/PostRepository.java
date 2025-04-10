@@ -24,9 +24,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findByPostId(@Param("postId") Long postId);
 
     //최신순, 페이지네이션
-    @Query(value = "select p from Post p order by p.createdAt desc",
-            countQuery = "select count (p) from Post p")
-    Page<Post> findNewsFeed(Pageable pageable);
+//    @Query(value = "select p from Post p order by p.createdAt desc",
+//            countQuery = "select count (p) from Post p")
+//    Page<Post> findNewsFeed(Pageable pageable);
 
     @Query("select p from Post p where p.id = :postId and p.user.id = :userId")
     Optional<Post> findByIdAndUserId(@Param("postId") Long id,@Param("userId") Long userId);
@@ -37,7 +37,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p WHERE " +
             "(:start IS NULL OR p.updatedAt>= :start) AND " +
             "(:end IS NULL OR p.updatedAt < :end)")
-    Page<Post> findPostsByModifiedAtRange(
+    Page<Post> getNewsFeed(
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
             Pageable pageable);

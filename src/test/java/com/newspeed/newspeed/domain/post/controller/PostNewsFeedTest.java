@@ -34,7 +34,7 @@ public class PostNewsFeedTest {
 
     @BeforeEach
     void setUp() {
-        user = User.builder().username("testuser").build();
+        user = User.builder().name("testuser").build();
         em.persist(user);
 
         List<Post> posts = new ArrayList<>();
@@ -74,10 +74,11 @@ public class PostNewsFeedTest {
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].likeCount").value(10))
-                .andExpect(jsonPath("$[1].likeCount").value(8))
-                .andExpect(jsonPath("$[2].likeCount").value(7));
+                .andExpect(jsonPath("$.data[0].likeCount").value(10))
+                .andExpect(jsonPath("$.data[1].likeCount").value(8))
+                .andExpect(jsonPath("$.data[2].likeCount").value(7));
     }
+
     @Test
     @DisplayName("뉴스피드 기간 필터 테스트")
     void getNewsFeedByDateRange() throws Exception {
@@ -87,9 +88,10 @@ public class PostNewsFeedTest {
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].content").exists())
-                .andExpect(jsonPath("$[1].content").exists());
+                .andExpect(jsonPath("$.data", hasSize(2)))
+                .andExpect(jsonPath("$.data[0].content").exists())
+                .andExpect(jsonPath("$.data[1].content").exists());
     }
+
 
 }

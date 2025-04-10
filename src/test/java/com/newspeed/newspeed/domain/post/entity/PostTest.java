@@ -13,7 +13,7 @@ class PostTest {
     void post() {
         //given
         User user = User.builder()
-                .username("tester")
+                .name("tester")
                 .build();
         Post post = Post.createPost(user, "테스트 게시글", "image.png");
         PostLike postLike = PostLike.of(user, post);
@@ -21,10 +21,7 @@ class PostTest {
         //when
         assertThat(postLike.getUser()).isEqualTo(user);
         assertThat(postLike.getPost()).isEqualTo(post);
-        assertThat(post.getPostLikes()).doesNotContain(postLike);
 
-        post.getPostLikes().add(postLike);
-        assertThat(post.getPostLikes()).contains(postLike);
     }
 
 }

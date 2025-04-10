@@ -1,4 +1,4 @@
-package com.newspeed.newspeed.domain.post.entity;
+package com.newspeed.newspeed.common.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
