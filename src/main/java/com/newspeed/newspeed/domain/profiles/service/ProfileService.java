@@ -39,7 +39,10 @@ public class ProfileService {
         if(currentUserId.equals(userId)){
             friendStatus = "ME";
         } else {
-            friendStatus = friendRepository.findStatusById(userId);
+            friendStatus = friendRepository.findStatusByUserIdAndProfileId(currentUserId, userId);
+            if(friendStatus == null) {
+                friendStatus = "SEND REQUEST";
+            }
         }
 
         //유저Dto 생성
@@ -70,7 +73,7 @@ public class ProfileService {
         List<Post> postList = postRepository.findByUserId(userId);
         return postList.stream()
                 .map(post -> {
-                    int commentCount = commentRepository.countById(post.getId());
+                    int commentCount = commentRepository.countByPostId(post.getId());
                     return ProfilePostDto.toDto(post, commentCount);
                 })
                 .toList();
