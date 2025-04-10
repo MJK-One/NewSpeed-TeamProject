@@ -38,7 +38,7 @@ public class PostService {
 
     public PostResponseDto createPost(PostRequestDto dto, Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Post post = dto.toEntity(user);
         Post saved = postRepository.save(post);
         return PostResponseDto.from(saved);
@@ -89,9 +89,9 @@ public class PostService {
     @Transactional
     public void toggleLike(Long postId, Long userId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.POST_NOT_FOUND));
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
         if (post.getUser().getId().equals(userId)) {
             throw new CustomException(ErrorCode.SELF_LIKE_NOT_ALLOWED);
