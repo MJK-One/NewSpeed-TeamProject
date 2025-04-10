@@ -38,6 +38,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostLikeRepository postLikeRepository;
 
+    @Transactional
     public PostResponseDto createPost(PostRequestDto dto, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
@@ -76,12 +77,14 @@ public class PostService {
         return dtos;
     }
 
+    @Transactional
     public PostResponseDto updatePost(Long id, PostRequestDto dto, Long userId) {
         Post post = postRepository.findByIdAndUserId(id, userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_POST_ACCESS));
         return PostResponseDto.from(post);
     }
 
+    @Transactional
     public void deletePost(Long id, Long userId) {
         Post post = postRepository.findByIdAndUserId(id, userId)
                 .orElseThrow(() -> new  CustomException(ErrorCode.UNAUTHORIZED_POST_ACCESS));
