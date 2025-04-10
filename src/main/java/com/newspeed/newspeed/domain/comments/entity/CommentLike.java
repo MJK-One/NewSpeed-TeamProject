@@ -3,6 +3,7 @@ package com.newspeed.newspeed.domain.comments.entity;
 import com.newspeed.newspeed.common.entity.BaseTimeEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.newspeed.newspeed.domain.users.entity.User;
 
 import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

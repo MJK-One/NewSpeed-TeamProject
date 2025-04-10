@@ -4,6 +4,8 @@ import com.newspeed.newspeed.domain.comments.dto.request.*;
 import com.newspeed.newspeed.domain.comments.dto.response.CommentResponseDto;
 import com.newspeed.newspeed.domain.comments.entity.*;
 import com.newspeed.newspeed.domain.comments.repository.*;
+import com.newspeed.newspeed.domain.users.entity.User;
+import com.newspeed.newspeed.domain.users.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -136,13 +138,13 @@ public class CommentService {
         Optional<Post> postOptional = postRepository.findById(postId);
         if (postOptional.isPresent()) {
             Post post = postOptional.get();
-            return post.getUser().getId().equals(userId);
+            return post.getUser().getUserId().equals(userId);
         }
         return false;
     }
 
     // 댓글 작성자인지 확인하는 메서드
     private boolean isCommentOwner(Long userId, Comment comment) {
-        return comment.getUser().getId().equals(userId);
+        return comment.getUser().getUserId().equals(userId);
     }
 }
