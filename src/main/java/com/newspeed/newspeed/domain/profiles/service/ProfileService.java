@@ -3,6 +3,7 @@ package com.newspeed.newspeed.domain.profiles.service;
 import com.newspeed.newspeed.common.exception.code.enums.ErrorCode;
 import com.newspeed.newspeed.common.exception.code.enums.SuccessCode;
 import com.newspeed.newspeed.common.response.ApiResponseDto;
+import com.newspeed.newspeed.domain.friends.repository.FriendRepository;
 import com.newspeed.newspeed.domain.profiles.dto.*;
 import com.newspeed.newspeed.domain.users.entity.User;
 import com.newspeed.newspeed.domain.users.repository.UserRepository;
@@ -27,7 +28,7 @@ public class ProfileService {
         User user = userRepository.findUserByIdOrElseThrow(userId);
 
         //친구, 게시글 수
-        int friendCount = friendRepository.countById(userId);
+        int friendCount = friendRepository.countFriendsByUserId(userId);
         int postCount = postRepository.countByUserId(userId);
 
         //게시글 검색 후 Dto 리스트로 변경
@@ -52,7 +53,7 @@ public class ProfileService {
         User user = userRepository.findUserByIdOrElseThrow(userId);
 
         //친구, 게시글 수
-        int friendCount = friendRepository.countById(userId);
+        int friendCount = friendRepository.countFriendsByUserId(userId);
         int postCount = postRepository.countByUserId(userId);
 
         //게시글 검색 후 Dto 리스트로 변경

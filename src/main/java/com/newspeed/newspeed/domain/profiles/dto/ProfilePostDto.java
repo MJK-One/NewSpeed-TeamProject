@@ -13,6 +13,6 @@ public class ProfilePostDto {
     private final int commentCount;
 
     public static ProfilePostDto toDto(Post post, int commentCount) {
-        return new ProfilePostDto(post.getId(), post.getImage(), post.getLikes(), commentCount);
+        return new ProfilePostDto(post.getId(), post.getImage(), post.getLikeCount(), commentCount);
     }
 }
