@@ -97,7 +97,12 @@ public class ProfileService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
         //이름과 이메일 업데이트
-        user.updateInfo(requestDto.getName(), requestDto.getEmail());
+        if(requestDto.getName() != null){
+            user.updateName(requestDto.getName());
+        }
+        if(requestDto.getEmail() != null){
+            user.updateEmail(requestDto.getEmail());
+        }
 
         //비번 업데이트
         if(requestDto.getNewPassword() != null) { //새 비밀번호를 지정하려고 한다면 비밀번호 체크

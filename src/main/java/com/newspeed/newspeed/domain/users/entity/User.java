@@ -32,14 +32,14 @@ public class User extends BaseTimeEntity {
         this.password = password;
     }
 
-    //유저 정보 업데이트
-    public void updateInfo(String name, String email) {
-        if(name != null) {
-            this.name = name;
-        }
-        if(email != null) {
-            this.email = email;
-        }
+    //유저 이름 업데이트
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    //유저 이메일 업데이트
+    public void updateEmail(String email) {
+        this.email = email;
     }
 
     //유저 비밀번호 업데이트
