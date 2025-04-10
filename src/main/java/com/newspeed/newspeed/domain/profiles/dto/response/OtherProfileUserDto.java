@@ -1,4 +1,4 @@
-package com.newspeed.newspeed.domain.profiles.dto;
+package com.newspeed.newspeed.domain.profiles.dto.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class OtherProfileUserDto {
-    private final long id;
+    private final Long id;
     private final String name;
     private final String friendStatus;
     private final int postCount;

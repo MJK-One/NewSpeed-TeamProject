@@ -33,9 +33,9 @@ public class User extends BaseTimeEntity {
     }
 
     //유저 정보 업데이트
-    public void updateInfo(String userName, String email) {
-        if(userName != null) {
-            this.name = userName;
+    public void updateInfo(String name, String email) {
+        if(name != null) {
+            this.name = name;
         }
         if(email != null) {
             this.email = email;

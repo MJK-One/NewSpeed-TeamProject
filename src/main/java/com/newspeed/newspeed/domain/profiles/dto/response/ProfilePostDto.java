@@ -1,6 +1,7 @@
-package com.newspeed.newspeed.domain.profiles.dto;
+package com.newspeed.newspeed.domain.profiles.dto.response;
 
 import com.newspeed.newspeed.domain.comments.entity.Post;
+//TODO: 이 import 제대로 변경
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
