@@ -1,5 +1,6 @@
 package com.newspeed.newspeed.domain.profiles.dto;
 
+import com.newspeed.newspeed.domain.comments.entity.Post;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -13,6 +14,6 @@ public class ProfilePostDto {
     private final int commentCount;
 
     public static ProfilePostDto toDto(Post post, int commentCount) {
-        return new ProfilePostDto(post.getId(), post.getImage(), post.getLikeCount(), commentCount);
+        return new ProfilePostDto(post.getId(), post.getImage(), post.getLikes(), commentCount);
     }
 }
