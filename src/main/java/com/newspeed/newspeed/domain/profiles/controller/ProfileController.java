@@ -1,10 +1,11 @@
 package com.newspeed.newspeed.domain.profiles.controller;
 
+import com.newspeed.newspeed.common.exception.code.enums.ErrorCode;
 import com.newspeed.newspeed.common.exception.code.enums.SuccessCode;
 import com.newspeed.newspeed.common.response.ApiResponseDto;
-import com.newspeed.newspeed.domain.profiles.dto.OtherProfileResponseDto;
-import com.newspeed.newspeed.domain.profiles.dto.ProfileRequestDto;
-import com.newspeed.newspeed.domain.profiles.dto.MyProfileResponseDto;
+import com.newspeed.newspeed.domain.profiles.dto.response.OtherProfileResponseDto;
+import com.newspeed.newspeed.domain.profiles.dto.request.ProfileUpdateRequestDto;
+import com.newspeed.newspeed.domain.profiles.dto.response.MyProfileResponseDto;
 import com.newspeed.newspeed.domain.profiles.service.ProfileService;
 import com.newspeed.newspeed.domain.users.entity.User;
 import jakarta.validation.Valid;
@@ -39,9 +40,15 @@ public class ProfileController {
     //프로필 수정
     @PatchMapping
     public ApiResponseDto<Void> updateProfile(
-            @RequestBody @Valid ProfileRequestDto requestDto,
+            @RequestBody @Valid ProfileUpdateRequestDto requestDto,
             @SessionAttribute(value = "user") User user
     ){
-        return profileService.updateProfile(requestDto, user.getUserId());
+        boolean updated = profileService.updateProfile(requestDto, user.getUserId());
+
+        if(updated){
+            return ApiResponseDto.success(SuccessCode.USER_UPDATE_SUCCESS, "/api/profiles");
+        } else {
+            return ApiResponseDto.fail(ErrorCode.INVALID_PASSWORD, "/api/profiles");
+        }
     }
 }
