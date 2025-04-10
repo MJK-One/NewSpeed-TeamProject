@@ -7,6 +7,7 @@ import com.newspeed.newspeed.domain.profiles.dto.ProfileRequestDto;
 import com.newspeed.newspeed.domain.profiles.dto.MyProfileResponseDto;
 import com.newspeed.newspeed.domain.profiles.service.ProfileService;
 import com.newspeed.newspeed.domain.users.entity.User;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,7 @@ public class ProfileController {
     //프로필 수정
     @PatchMapping
     public ApiResponseDto<Void> updateProfile(
-            @RequestBody ProfileRequestDto requestDto,
+            @RequestBody @Valid ProfileRequestDto requestDto,
             @SessionAttribute(value = "user") User user
     ){
         return profileService.updateProfile(requestDto, user.getUserId());
