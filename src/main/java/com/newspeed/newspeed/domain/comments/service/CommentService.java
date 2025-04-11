@@ -1,14 +1,16 @@
 package com.newspeed.newspeed.domain.comments.service;
 
+import com.newspeed.newspeed.common.exception.base.CustomException;
+import com.newspeed.newspeed.common.exception.code.enums.ErrorCode;
 import com.newspeed.newspeed.domain.comments.dto.request.*;
-import com.newspeed.newspeed.domain.comments.dto.response.CommentResponseDto;
+import com.newspeed.newspeed.domain.comments.dto.response.*;
 import com.newspeed.newspeed.domain.comments.entity.*;
 import com.newspeed.newspeed.domain.comments.repository.*;
 import com.newspeed.newspeed.domain.post.entity.Post;
 import com.newspeed.newspeed.domain.post.repository.PostRepository;
 import com.newspeed.newspeed.domain.users.entity.User;
 import com.newspeed.newspeed.domain.users.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,51 +25,56 @@ public class CommentService {
     private final CommentLikeRepository commentLikeRepository;
     private final PostRepository postRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     // 댓글 전체 조회
     public List<CommentResponseDto> getCommentsByPostId(Long postId) {
         return commentRepository.findCommentResponseDtoByPostId(postId);
     }
 
     @Transactional
-    // 댓글 생성
-    public Comment createComment(Long userId, Long postId, CommentRequestDto requestDto) {
-            // 1. 사용자 인증 및 게시글 존재 확인
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    public CommentCreateResponseDto createComment(Long userId, Long postId, CommentCreateRequestDto requestDto) {
+        // 1. 사용자 인증 및 게시글 존재 확인
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-            Post post = postRepository.findById(postId)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
-            // 2. 댓글 생성
-            Comment comment = new Comment(user, post, requestDto.getCommentText());
-            comment.setCommentLikes(0); // 좋아요 개수 0 초기화
+        // 2. 댓글 생성
+        Comment comment = new Comment(user, post, requestDto.getCommentText());
+        comment.setCommentLikes(0); // 좋아요 개수 0 초기화
 
-            // 3. 댓글 저장
-            return commentRepository.save(comment);
+        // 3. 댓글 저장
+        Comment savedComment = commentRepository.save(comment);
+
+        // 4. CommentCreateResponseDto 생성 및 반환
+        return CommentCreateResponseDto.builder()
+                .commentId(savedComment.getId())
+                .userId(savedComment.getUser().getUserId())
+                .postId(savedComment.getPost().getId())
+                .commentText(savedComment.getCommentText())
+                .commentLikes(savedComment.getCommentLikes())
+                .build();
     }
 
 
     @Transactional
     // 댓글 수정
-    public void updateComment(Long userId, Long commentId, UpdateCommentRequestDto requestDto) {
+    public void updateComment(Long userId, Long commentId, CommentUpdateRequestDto requestDto) {
         // 1. 사용자 인증 및 댓글 존재 확인
         userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
 
         // 2. 댓글 작성자인지 확인
         if (!isCommentOwner(userId, comment)) {
-            throw new IllegalArgumentException("댓글 작성자가 아닙니다.");
+            throw new CustomException(ErrorCode.NO_PERMISSION);
         }
 
         // 3. 댓글 내용 수정
         comment.setCommentText(requestDto.getCommentText());
-
-        // 4. 변경 사항 저장
-        commentRepository.save(comment);
     }
 
     @Transactional
@@ -75,14 +82,14 @@ public class CommentService {
     public void deleteComment(Long userId, Long commentId) {
         // 1. 사용자 인증 및 댓글 존재 확인
         userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
 
         // 2. 게시글 작성자 또는 댓글 작성자인지 확인
         if (!isPostOwner(userId, comment.getPost().getId()) && !isCommentOwner(userId, comment)) {
-            throw new IllegalArgumentException("게시글 작성자 및 댓글 작성자가 아닙니다.");
+            throw new CustomException(ErrorCode.NO_PERMISSION);
         }
 
         // 3. 댓글 삭제
@@ -94,22 +101,23 @@ public class CommentService {
     public void addCommentLike(Long userId, Long commentId) {
         // 1. 사용자 인증 및 댓글 존재 확인
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
 
-        if (commentLikeRepository.existsByComment_IdAndUser_Id(commentId, userId)) {
-            throw new IllegalStateException("이미 좋아요를 누른 댓글입니다.");
+        // 2. 댓글 좋아요 유무 확인
+        if (commentLikeRepository.existsByCommentIdAndUserId(commentId, userId)) {
+            throw new CustomException(ErrorCode.COMMENT_ALREADY_LIKED);
         }
 
-        // 2. 좋아요
+        // 3. 좋아요
         CommentLike commentLike = new CommentLike(user, comment);
 
-        // 3. 좋아요 저장
+        // 4. 좋아요 저장
         commentLikeRepository.save(commentLike);
 
-        // 4. Comment 엔티티의 commentLikes 값 증가
+        // 5. Comment 엔티티의 commentLikes 값 증가
         comment.setCommentLikes(comment.getCommentLikes() + 1);
     }
 
@@ -118,18 +126,18 @@ public class CommentService {
     public void removeCommentLike(Long userId, Long commentId) {
         // 1. 사용자 인증 및 댓글 존재 확인
         userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
 
         // 2. 댓글 좋아요 유무 확인
-        if (!commentLikeRepository.existsByComment_IdAndUser_Id(userId, commentId)) {
-            throw new IllegalStateException("좋아요를 누르지 않은 댓글입니다.");
+        if (!commentLikeRepository.existsByCommentIdAndUserId(userId, commentId)) {
+            throw new CustomException(ErrorCode.COMMENT_NOT_LIKED);
         }
 
         // 3. 좋아요 삭제
-        commentLikeRepository.deleteByComment_IdAndUser_Id(userId, commentId);
+        commentLikeRepository.deleteByCommentIdAndUserId(userId, commentId);
 
         // 4. Comment 엔티티의 commentLikes 값 감소
         comment.setCommentLikes(comment.getCommentLikes() - 1);
