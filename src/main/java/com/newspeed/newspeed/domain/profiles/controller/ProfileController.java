@@ -26,7 +26,7 @@ public class ProfileController {
             @PathVariable Long userId,
             @SessionAttribute(value = "user") User user
     ) {
-        return ApiResponseDto.success(SuccessCode.PROFILE_VIEW_SUCCESS, profileService.findProfileById(userId, user.getUserId()), "/api/profiles/"+userId);
+        return ApiResponseDto.success(SuccessCode.PROFILE_VIEW_SUCCESS, profileService.findProfileById(userId, user), "/api/profiles/"+userId);
     }
 
     //내 프로필 조회
@@ -34,7 +34,7 @@ public class ProfileController {
     public ApiResponseDto<MyProfileResponseDto> findMyProfile(
             @SessionAttribute(value = "user") User user
     ) {
-        return ApiResponseDto.success(SuccessCode.PROFILE_VIEW_SUCCESS, profileService.findMyProfile(user.getUserId()), "/api/profiles/my");
+        return ApiResponseDto.success(SuccessCode.PROFILE_VIEW_SUCCESS, profileService.findMyProfile(user), "/api/profiles/my");
     }
 
     //프로필 수정

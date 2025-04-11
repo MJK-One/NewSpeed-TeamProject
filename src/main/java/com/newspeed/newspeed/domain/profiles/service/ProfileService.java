@@ -29,8 +29,9 @@ public class ProfileService {
 
     //타인 프로필 조회
     @Transactional(readOnly = true)
-    public OtherProfileResponseDto findProfileById(Long userId, Long currentUserId) {
+    public OtherProfileResponseDto findProfileById(Long userId, User currentUser) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+        Long currentUserId = currentUser.getUserId();
 
         //친구, 게시글 수
         int friendCount = friendshipRepository.countFriendsByUserId(userId);
@@ -63,8 +64,8 @@ public class ProfileService {
 
     //내 프로필 조회
     @Transactional(readOnly = true)
-    public MyProfileResponseDto findMyProfile(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+    public MyProfileResponseDto findMyProfile(User user) {
+        Long userId = user.getUserId();
 
         //친구, 게시글 수
         int friendCount = friendshipRepository.countFriendsByUserId(userId);
