@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -41,4 +42,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
             Pageable pageable);
+
+
+    int countByUser_UserId(Long userId);
+
+    List<Post> findByUser_UserId(Long userId);
 }

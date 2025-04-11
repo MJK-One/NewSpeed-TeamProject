@@ -16,6 +16,10 @@ public enum SuccessCode {
     // 200 Ok
     GENERAL_SUCCESS(HttpStatus.OK, "테스트에 성공했습니다."),
     USER_LOGIN_SUCCESS(HttpStatus.OK, "로그인이 완료되었습니다."),
+
+    PROFILE_VIEW_SUCCESS(HttpStatus.OK, "프로필 조회에 성공했습니다."),
+    USER_UPDATE_SUCCESS(HttpStatus.OK, "유저 정보 업데이트가 완료되었습니다."),
+
     HANDLE_FRIEND_SUCCESS(HttpStatus.OK, "친구 요청에 대한 응답이 완료되었습니다"),
     GET_FRIENDSHIPS_SUCCESS(HttpStatus.OK, "친구 목록 조회가 성공하였습니다"),
     GET_FRIENDSHIPREQUESTS_SUCCESS(HttpStatus.OK, "친구 요청 목록 조회가 성공하였습니다"),

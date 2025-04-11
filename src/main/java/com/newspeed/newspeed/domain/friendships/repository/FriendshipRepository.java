@@ -47,4 +47,11 @@ public interface FriendshipRepository extends JpaRepository<Friendship,Long> {
                   AND (f.followFrom.userId = :userId OR f.followTo.userId = :userId)
             """)
     Page<FriendSummary> findPendingByConditions(@Param("userId") Long userId, Pageable pageable);
+
+    @Query("SELECT COUNT(f) FROM Friendship f WHERE (f.followTo.userId = :userId OR f.followFrom.userId = :userId) AND f.status = 'ACCEPTED'")
+    int countFriendsByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT f.status FROM Friendship f WHERE (f.followTo.userId = :userId AND f.followFrom.userId = :profileId) OR (f.followTo. userId= :profileId AND f.followFrom.userId = :userId)")
+    String findStatusByUserIdAndProfileId(@Param("userId") Long userId, @Param("profileId") Long profileId);
+
 }

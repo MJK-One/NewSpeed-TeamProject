@@ -21,4 +21,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "WHERE c.post.id = :postId " +
             "ORDER BY c.id DESC")
     List<CommentResponseDto> findCommentResponseDtoByPostId(@Param("postId") Long postId);
+
+    int countByPostId(Long id);
 }
