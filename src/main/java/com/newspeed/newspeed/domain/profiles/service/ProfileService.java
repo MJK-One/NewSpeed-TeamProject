@@ -3,10 +3,10 @@ package com.newspeed.newspeed.domain.profiles.service;
 import com.newspeed.newspeed.common.config.PasswordEncoder;
 import com.newspeed.newspeed.common.exception.base.NotFoundException;
 import com.newspeed.newspeed.common.exception.code.enums.ErrorCode;
-import com.newspeed.newspeed.domain.comments.entity.Post;
 import com.newspeed.newspeed.domain.comments.repository.CommentRepository;
-import com.newspeed.newspeed.domain.comments.repository.PostRepository;
-import com.newspeed.newspeed.domain.friends.repository.FriendshipRepository;
+import com.newspeed.newspeed.domain.friendships.repository.FriendshipRepository;
+import com.newspeed.newspeed.domain.post.entity.Post;
+import com.newspeed.newspeed.domain.post.repository.PostRepository;
 import com.newspeed.newspeed.domain.profiles.dto.request.ProfileUpdateRequestDto;
 import com.newspeed.newspeed.domain.profiles.dto.response.*;
 import com.newspeed.newspeed.domain.users.entity.User;
@@ -34,7 +34,7 @@ public class ProfileService {
 
         //친구, 게시글 수
         int friendCount = friendshipRepository.countFriendsByUserId(userId);
-        int postCount = postRepository.countByUserId(userId);
+        int postCount = postRepository.countByUser_UserId(userId);
 
         //게시글 검색 후 Dto 리스트로 변경
         List<ProfilePostDto> profilePostList = convertPostToDtoList(userId);
@@ -69,7 +69,7 @@ public class ProfileService {
 
         //친구, 게시글 수
         int friendCount = friendshipRepository.countFriendsByUserId(userId);
-        int postCount = postRepository.countByUserId(userId);
+        int postCount = postRepository.countByUser_UserId(userId);
 
         //게시글 검색 후 Dto 리스트로 변경
         List<ProfilePostDto> profilePostList = convertPostToDtoList(userId);
@@ -82,7 +82,7 @@ public class ProfileService {
 
     //유저 아이디로 게시글들 찾은 후 ProfilePostDto로 변환
     public List<ProfilePostDto> convertPostToDtoList(Long userId){
-        List<Post> postList = postRepository.findByUserId(userId);
+        List<Post> postList = postRepository.findByUser_UserId(userId);
         return postList.stream()
                 .map(post -> {
                     int commentCount = commentRepository.countByPostId(post.getId());
@@ -108,7 +108,8 @@ public class ProfileService {
         if(requestDto.getNewPassword() != null) { //새 비밀번호를 지정하려고 한다면 비밀번호 체크
             //기존 비밀번호가 같으면
             if (passwordEncoder.matches(requestDto.getPreviousPassword(), user.getPassword())) {
-                user.updatePassword(requestDto.getNewPassword()); //업데이트 로직
+                String encodedPassword = passwordEncoder.encode(requestDto.getNewPassword());
+                user.updatePassword(encodedPassword); //업데이트 로직
             } else {
                 return false;
             }

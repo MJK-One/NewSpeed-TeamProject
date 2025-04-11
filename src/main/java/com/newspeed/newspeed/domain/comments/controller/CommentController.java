@@ -1,9 +1,7 @@
 package com.newspeed.newspeed.domain.comments.controller;
 
-import com.newspeed.newspeed.domain.comments.dto.request.CommentRequestDto;
-import com.newspeed.newspeed.domain.comments.dto.request.UpdateCommentRequestDto;
-import com.newspeed.newspeed.domain.comments.dto.response.CommentResponseDto;
-import com.newspeed.newspeed.domain.comments.entity.Comment;
+import com.newspeed.newspeed.domain.comments.dto.request.*;
+import com.newspeed.newspeed.domain.comments.dto.response.*;
 import com.newspeed.newspeed.domain.comments.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,20 +25,20 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createComment(
+    public ResponseEntity<CommentCreateResponseDto> createComment(
             @RequestParam Long userId,
             @RequestParam Long postId,
-            @Valid @RequestBody CommentRequestDto requestDto) {
-        Comment comment = commentService.createComment(userId, postId, requestDto);
+            @Valid @RequestBody CommentCreateRequestDto requestDto) {
+        CommentCreateResponseDto commentResponseDto = commentService.createComment(userId, postId, requestDto);
 
-        return new ResponseEntity<>(comment, HttpStatus.CREATED);
+        return new ResponseEntity<>(commentResponseDto, HttpStatus.CREATED);
     }
 
     @PutMapping("/{commentId}")
     public ResponseEntity<?> updateComment(
             @PathVariable Long commentId,
             @RequestParam("userId") Long userId,
-            @RequestBody UpdateCommentRequestDto requestDto) {
+            @RequestBody CommentUpdateRequestDto requestDto) {
         commentService.updateComment(userId, commentId, requestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
