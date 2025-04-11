@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Configuration
-public class AppConfig {
+public class  AppConfig {
 
     //  ObjectMapper 설정 (LocalDateTime 직렬화 대응)
     @Bean
