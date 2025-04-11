@@ -28,7 +28,7 @@ public class UserService {
      * @param userSignupRequestDto 사용자 생성 요청 데이터를 담은 DTO
      */
     @Transactional
-    public void signup(final UserSignupRequestDto userSignupRequestDto, HttpServletRequest httpServletRequest) {
+    public void signup(final UserSignupRequestDto userSignupRequestDto) {
 
         // 이메일 존재 여부 확인
         Optional<User> existingUserOpt = userRepository.findByEmail(userSignupRequestDto.email());
@@ -59,20 +59,19 @@ public class UserService {
     }
 
     @Transactional
-    public void login(final UserLoginRequestDto userLoginRequestDto, HttpServletRequest request) {
+    public User login(final UserLoginRequestDto requestDto) {
 
         // 사용자 조회
-        User user = userRepository.findByEmail(userLoginRequestDto.email())
-                .filter(u -> u.getName().equals(userLoginRequestDto.name()))
+        User user = userRepository.findByEmail(requestDto.email())
+                .filter(u -> u.getName().equals(requestDto.name()))
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_REGISTERED));
 
         // 비밀번호 확인
-        if (!passwordEncoder.matches(userLoginRequestDto.password(), user.getPassword())) {
+        if (!passwordEncoder.matches(requestDto.password(), user.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
-        HttpSession session = request.getSession(true);
-        session.setAttribute("user", user);
+        return user;
     }
 
     @Transactional
