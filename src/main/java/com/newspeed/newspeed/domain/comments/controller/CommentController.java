@@ -26,7 +26,7 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<CommentCreateResponseDto> createComment(
-            @RequestParam Long userId,
+            @SessionAttribute("userId") Long userId,
             @RequestParam Long postId,
             @Valid @RequestBody CommentCreateRequestDto requestDto) {
         CommentCreateResponseDto commentResponseDto = commentService.createComment(userId, postId, requestDto);
@@ -37,7 +37,7 @@ public class CommentController {
     @PutMapping("/{commentId}")
     public ResponseEntity<?> updateComment(
             @PathVariable Long commentId,
-            @RequestParam("userId") Long userId,
+            @SessionAttribute("userId") Long userId,
             @RequestBody CommentUpdateRequestDto requestDto) {
         commentService.updateComment(userId, commentId, requestDto);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -46,7 +46,7 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<?> deleteComment(
             @PathVariable Long commentId,
-            @RequestParam("userId") Long userId) {
+            @SessionAttribute("userId") Long userId) {
         commentService.deleteComment(userId, commentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -54,7 +54,7 @@ public class CommentController {
     @PostMapping("/{commentId}/like")
     public ResponseEntity<?> addCommentLike(
             @PathVariable Long commentId,
-            @RequestParam("userId") Long userId) {
+            @SessionAttribute("userId") Long userId) {
         commentService.addCommentLike(userId, commentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -62,7 +62,7 @@ public class CommentController {
     @DeleteMapping("/{commentId}/like")
     public ResponseEntity<?> removeCommentLike(
             @PathVariable Long commentId,
-            @RequestParam("userId") Long userId) {
+            @SessionAttribute("userId") Long userId) {
         commentService.removeCommentLike(userId, commentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

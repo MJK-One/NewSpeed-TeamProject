@@ -2,6 +2,7 @@ package com.newspeed.newspeed.domain.comments.entity;
 
 import com.newspeed.newspeed.common.entity.BaseTimeEntity;
 import com.newspeed.newspeed.domain.users.entity.User;
+import com.newspeed.newspeed.domain.post.entity.Post;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;

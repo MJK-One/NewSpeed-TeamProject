@@ -6,6 +6,8 @@ import com.newspeed.newspeed.domain.comments.dto.request.*;
 import com.newspeed.newspeed.domain.comments.dto.response.*;
 import com.newspeed.newspeed.domain.comments.entity.*;
 import com.newspeed.newspeed.domain.comments.repository.*;
+import com.newspeed.newspeed.domain.post.entity.Post;
+import com.newspeed.newspeed.domain.post.repository.PostRepository;
 import com.newspeed.newspeed.domain.users.entity.User;
 import com.newspeed.newspeed.domain.users.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +38,7 @@ public class CommentService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
         // 2. 댓글 생성
         Comment comment = new Comment(user, post, requestDto.getCommentText());
@@ -106,7 +108,7 @@ public class CommentService {
 
         // 2. 댓글 좋아요 유무 확인
         if (commentLikeRepository.existsByCommentIdAndUserId(commentId, userId)) {
-            throw new CustomException(ErrorCode.ALREADY_LIKED);
+            throw new CustomException(ErrorCode.COMMENT_ALREADY_LIKED);
         }
 
         // 3. 좋아요
@@ -146,7 +148,8 @@ public class CommentService {
         Optional<Post> postOptional = postRepository.findById(postId);
         if (postOptional.isPresent()) {
             Post post = postOptional.get();
-            return post.getUser().getUserId().equals(userId);
+            // :todo 엔티티 통합 시 수정 필요 getId()
+            return post.getUser().getId().equals(userId);
         }
         return false;
     }
