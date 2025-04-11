@@ -31,10 +31,10 @@ public class ProfileController {
 
     //내 프로필 조회
     @GetMapping("/my")
-    public ApiResponseDto<MyProfileResponseDto> findMyProfileById(
+    public ApiResponseDto<MyProfileResponseDto> findMyProfile(
             @SessionAttribute(value = "user") User user
     ) {
-        return ApiResponseDto.success(SuccessCode.PROFILE_VIEW_SUCCESS, profileService.findMyProfileById(user.getUserId()), "/api/profiles/my");
+        return ApiResponseDto.success(SuccessCode.PROFILE_VIEW_SUCCESS, profileService.findMyProfile(user.getUserId()), "/api/profiles/my");
     }
 
     //프로필 수정

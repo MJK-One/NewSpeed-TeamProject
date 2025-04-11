@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder
 public class OtherProfileUserDto {
-    private final Long id;
     private final String name;
     private final String friendStatus;
     private final int postCount;

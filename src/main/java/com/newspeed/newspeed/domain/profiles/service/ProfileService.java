@@ -52,7 +52,6 @@ public class ProfileService {
 
         //유저Dto 생성
         OtherProfileUserDto otherProfileUserDto = OtherProfileUserDto.builder()
-                .id(user.getUserId())
                 .name(user.getName())
                 .friendStatus(friendStatus)
                 .postCount(postCount)
@@ -64,7 +63,7 @@ public class ProfileService {
 
     //내 프로필 조회
     @Transactional(readOnly = true)
-    public MyProfileResponseDto findMyProfileById(Long userId) {
+    public MyProfileResponseDto findMyProfile(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
         //친구, 게시글 수
@@ -76,7 +75,6 @@ public class ProfileService {
 
         //유저Dto 생성
         MyProfileUserDto myProfileUserDto = MyProfileUserDto.builder()
-                .id(user.getUserId())
                 .name(user.getName())
                 .email(user.getEmail())
                 .friendCount(friendCount)

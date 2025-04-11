@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder
 public class MyProfileUserDto {
-    private final Long id;
     private final String name;
     private final String email;
     private final int postCount;
