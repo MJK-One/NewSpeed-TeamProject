@@ -145,7 +145,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponseDto<?>> handleCustomException(CustomException e, HttpServletRequest httpServletRequest) {
         log.error("handleException() in GlobalExceptionHandler throw BusinessException : {}", e.getMessage());
         return ResponseEntity.status(e.getHttpStatus())
-                .body(ApiResponseDto.fail(e.getErrorCode(), httpServletRequest.getRequestURI()));
+                .body(ApiResponseDto.fail(e.getMessage(), httpServletRequest.getRequestURI()));
     }
 
     /**
