@@ -22,33 +22,28 @@ public class FriendShipController {
     private final FriendShipService friendShipService;
 
     @PostMapping
-    public ApiResponseDto<Void> sendRequest(@RequestBody @Validated SendFriendShipRequest request) {
-        //todo: 로그인 내용 Pull 이후 세션으로부터 유저 ID를 받아오는 로직 필요
-        Long userId = 1L;
+    public ApiResponseDto<Void> sendRequest(@RequestBody @Validated SendFriendShipRequest request, @SessionAttribute(name = "user") Long userId) {
         friendShipService.sendRequest(request,userId);
         return ApiResponseDto.success(REQUEST_FRIEND_SUCCESS, "/api/friendships");
     }
 
     @PatchMapping("/{requestId}")
-    public ApiResponseDto<Void> handleRequest(@PathVariable(name = "requestId") Long requestId, @RequestBody @Validated HandleFriendShipRequest request) {
-        //todo: 로그인 내용 Pull 이후 세션으로부터 유저 ID를 받아오는 로직 필요
-        Long userId = 1L;
+    public ApiResponseDto<Void> handleRequest(@PathVariable(name = "requestId") Long requestId, @RequestBody @Validated HandleFriendShipRequest request,
+                                              @SessionAttribute(name = "user") Long userId) {
         friendShipService.handleRequest(userId, requestId, request);
         return ApiResponseDto.success(HANDLE_FRIEND_SUCCESS, "/api/friendships");
     }
 
     @GetMapping
-    public ApiResponseDto<GetFriendShipsResponse> getFriendships(@PageableDefault(size = 10, page = 0) Pageable pageable) {
-        //todo: 로그인 내용 Pull 이후 세션으로부터 유저 ID를 받아오는 로직 필요
-        Long userId = 1L;
+    public ApiResponseDto<GetFriendShipsResponse> getFriendships(@PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                                 @SessionAttribute(name = "user") Long userId) {
         GetFriendShipsResponse response = friendShipService.getFriendships(userId, pageable);
         return ApiResponseDto.success(GET_FRIENDSHIPS_SUCCESS, response,"/api/friendships");
     }
 
     @GetMapping("/requests")
-    public ApiResponseDto<GetFriendShipRequestsResponse> getFriendshipRequests(@PageableDefault(size = 10, page = 0) Pageable pageable) {
-        //todo: 로그인 내용 Pull 이후 세션으로부터 유저 ID를 받아오는 로직 필요
-        Long userId = 1L;
+    public ApiResponseDto<GetFriendShipRequestsResponse> getFriendshipRequests(@PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                                               @SessionAttribute(name = "user") Long userId) {
         GetFriendShipRequestsResponse response = friendShipService.getFriendshipRequests(userId, pageable);
         return ApiResponseDto.success(GET_FRIENDSHIPREQUESTS_SUCCESS, response,"/api/friendships/requests");
     }

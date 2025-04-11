@@ -25,7 +25,7 @@ public enum ErrorCode {
 
     // 409 - CONFLICT
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 사용 중인 이메일입니다."),
-
+    ALREADY_WITHDRAWN(HttpStatus.CONFLICT, "이미 탈퇴된 사용자입니다."),
     //친구 관련
     ALREADY_EXIST_FRIENDSHIP(HttpStatus.BAD_REQUEST, "이미 존재하는 친구 요청입니다. (상태: %s)"),
     NOT_ALLOW_REQUEST_MYSELF(HttpStatus.BAD_REQUEST,"자기 자신에게는 요청을 보낼 수 없습니다."),
