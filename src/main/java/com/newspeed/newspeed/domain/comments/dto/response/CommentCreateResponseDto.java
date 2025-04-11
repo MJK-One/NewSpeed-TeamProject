@@ -4,7 +4,6 @@ import jdk.jshell.Snippet;
 import lombok.*;
 
 @Getter
-@RequiredArgsConstructor
 @Builder
 public class CommentCreateResponseDto {
     private final Long commentId;
