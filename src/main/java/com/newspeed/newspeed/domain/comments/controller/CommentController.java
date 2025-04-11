@@ -25,11 +25,11 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateCommentResponseDto> createComment(
+    public ResponseEntity<CommentCreateResponseDto> createComment(
             @RequestParam Long userId,
             @RequestParam Long postId,
-            @Valid @RequestBody CreateCommentRequestDto requestDto) {
-        CreateCommentResponseDto commentResponseDto = commentService.createComment(userId, postId, requestDto);
+            @Valid @RequestBody CommentCreateRequestDto requestDto) {
+        CommentCreateResponseDto commentResponseDto = commentService.createComment(userId, postId, requestDto);
 
         return new ResponseEntity<>(commentResponseDto, HttpStatus.CREATED);
     }
@@ -38,7 +38,7 @@ public class CommentController {
     public ResponseEntity<?> updateComment(
             @PathVariable Long commentId,
             @RequestParam("userId") Long userId,
-            @RequestBody UpdateCommentRequestDto requestDto) {
+            @RequestBody CommentUpdateRequestDto requestDto) {
         commentService.updateComment(userId, commentId, requestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }

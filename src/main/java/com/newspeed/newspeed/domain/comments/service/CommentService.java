@@ -6,7 +6,7 @@ import com.newspeed.newspeed.domain.comments.entity.*;
 import com.newspeed.newspeed.domain.comments.repository.*;
 import com.newspeed.newspeed.domain.users.entity.User;
 import com.newspeed.newspeed.domain.users.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +21,14 @@ public class CommentService {
     private final CommentLikeRepository commentLikeRepository;
     private final PostRepository postRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     // 댓글 전체 조회
     public List<CommentResponseDto> getCommentsByPostId(Long postId) {
         return commentRepository.findCommentResponseDtoByPostId(postId);
     }
 
     @Transactional
-    public CreateCommentResponseDto createComment(Long userId, Long postId, CreateCommentRequestDto requestDto) {
+    public CommentCreateResponseDto createComment(Long userId, Long postId, CommentCreateRequestDto requestDto) {
         // 1. 사용자 인증 및 게시글 존재 확인
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
@@ -44,7 +44,7 @@ public class CommentService {
         Comment savedComment = commentRepository.save(comment);
 
         // 4. CreateCommentResponseDto 생성 및 반환
-        return new CreateCommentResponseDto(
+        return new CommentCreateResponseDto(
                 savedComment.getId(),
                 savedComment.getUser().getUserId(),
                 savedComment.getPost().getId(),
@@ -56,7 +56,7 @@ public class CommentService {
 
     @Transactional
     // 댓글 수정
-    public void updateComment(Long userId, Long commentId, UpdateCommentRequestDto requestDto) {
+    public void updateComment(Long userId, Long commentId, CommentUpdateRequestDto requestDto) {
         // 1. 사용자 인증 및 댓글 존재 확인
         userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));

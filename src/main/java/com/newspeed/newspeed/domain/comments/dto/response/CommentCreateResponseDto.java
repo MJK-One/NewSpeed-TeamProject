@@ -4,7 +4,7 @@ import lombok.*;
 
 @Getter
 @RequiredArgsConstructor
-public class CreateCommentResponseDto {
+public class CommentCreateResponseDto {
     private final Long commentId;
     private final Long userId;
     private final Long postId;
