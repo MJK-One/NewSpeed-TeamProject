@@ -26,14 +26,23 @@ public class User extends BaseTimeEntity {
     @Column(name="password", nullable = false, length = 255)
     private String password;
 
+    @Column(nullable = false)
+    private boolean deleted = false;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void markAsDeleted() {
+        this.deleted = true;
+    }
+
     @Builder
     public User(String name, String email, String password){
         this.name = name;
         this.email = email;
         this.password = password;
     }
-
-
 
 }
 

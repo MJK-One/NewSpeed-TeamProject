@@ -8,8 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> {
-    @Modifying // 추가: DELETE, UPDATE 쿼리에는 @Modifying 어노테이션을 사용해야 합니다.
-    @Transactional // 추가: 트랜잭션 처리를 위해 @Transactional 어노테이션을 추가합니다.
+    @Modifying
+    @Transactional
     @Query("DELETE FROM CommentLike cl WHERE cl.comment.id = :commentId AND cl.user.userId = :userId")
     void deleteByCommentIdAndUserId(@Param("commentId") Long commentId, @Param("userId") Long userId);
 
