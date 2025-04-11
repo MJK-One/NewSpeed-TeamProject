@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "`user`")
+@Table(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
     @Id
