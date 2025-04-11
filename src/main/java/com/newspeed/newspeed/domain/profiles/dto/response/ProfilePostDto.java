@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProfilePostDto {
 
-    private final long postId;
+    private final Long postId;
     private final String postImage;
     private final int postLikes;
     private final int commentCount;

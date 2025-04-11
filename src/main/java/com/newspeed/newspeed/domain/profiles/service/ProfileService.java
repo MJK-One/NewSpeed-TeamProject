@@ -75,7 +75,13 @@ public class ProfileService {
         List<ProfilePostDto> profilePostList = convertPostToDtoList(userId);
 
         //유저Dto 생성
-        MyProfileUserDto myProfileUserDto = new MyProfileUserDto(user.getUserId(), user.getName(), user.getEmail(), friendCount, postCount);
+        MyProfileUserDto myProfileUserDto = MyProfileUserDto.builder()
+                .id(user.getUserId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .friendCount(friendCount)
+                .postCount(postCount)
+                .build();
 
         return new MyProfileResponseDto(myProfileUserDto, profilePostList);
     }
