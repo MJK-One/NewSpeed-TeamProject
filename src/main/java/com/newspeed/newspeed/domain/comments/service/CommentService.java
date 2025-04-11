@@ -48,13 +48,13 @@ public class CommentService {
         Comment savedComment = commentRepository.save(comment);
 
         // 4. CommentCreateResponseDto 생성 및 반환
-        return new CommentCreateResponseDto(
-                savedComment.getId(),
-                savedComment.getUser().getUserId(),
-                savedComment.getPost().getId(),
-                savedComment.getCommentText(),
-                savedComment.getCommentLikes()
-        );
+        return CommentCreateResponseDto.builder()
+                .commentId(savedComment.getId())
+                .userId(savedComment.getUser().getUserId())
+                .postId(savedComment.getPost().getId())
+                .commentText(savedComment.getCommentText())
+                .commentLikes(savedComment.getCommentLikes())
+                .build();
     }
 
 

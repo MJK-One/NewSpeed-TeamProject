@@ -1,9 +1,11 @@
 package com.newspeed.newspeed.domain.comments.dto.response;
 
+import jdk.jshell.Snippet;
 import lombok.*;
 
 @Getter
 @RequiredArgsConstructor
+@Builder
 public class CommentCreateResponseDto {
     private final Long commentId;
     private final Long userId;
