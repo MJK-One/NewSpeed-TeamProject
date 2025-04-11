@@ -148,8 +148,7 @@ public class CommentService {
         Optional<Post> postOptional = postRepository.findById(postId);
         if (postOptional.isPresent()) {
             Post post = postOptional.get();
-            // :todo 엔티티 통합 시 수정 필요 getId()
-            return post.getUser().getId().equals(userId);
+            return post.getUser().getUserId().equals(userId);
         }
         return false;
     }

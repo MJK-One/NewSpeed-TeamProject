@@ -21,14 +21,14 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/{postId}")
-    public ResponseEntity<List<CommentResponseDto>> getCommentsByPostId(@PathVariable Long postId) {
+    public ResponseEntity<ApiResponseDto<List<CommentResponseDto>>> getCommentsByPostId(@PathVariable Long postId) {
         List<CommentResponseDto> comments = commentService.getCommentsByPostId(postId);
-        return new ResponseEntity<>(comments, HttpStatus.OK);
+        return ResponseEntity.ok(ApiResponseDto.success(SuccessCode.COMMENT_GET_SUCCESS, comments, "/api/comments/" + postId));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponseDto<CommentCreateResponseDto>> createComment(
-            @SessionAttribute("userId") Long userId,
+            @SessionAttribute("user") Long userId,
             @RequestParam Long postId,
             @Valid @RequestBody CommentCreateRequestDto requestDto) {
         CommentCreateResponseDto commentResponseDto = commentService.createComment(userId, postId, requestDto);
@@ -38,7 +38,7 @@ public class CommentController {
     @PutMapping("/{commentId}")
     public ResponseEntity<ApiResponseDto<Void>> updateComment(
             @PathVariable Long commentId,
-            @SessionAttribute("userId") Long userId,
+            @SessionAttribute("user") Long userId,
             @RequestBody CommentUpdateRequestDto requestDto) {
         commentService.updateComment(userId, commentId, requestDto);
         return ResponseEntity.ok(ApiResponseDto.success(SuccessCode.COMMENT_UPDATE_SUCCESS, "/api/comments/" + commentId));
@@ -47,7 +47,7 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<ApiResponseDto<Void>> deleteComment(
             @PathVariable Long commentId,
-            @SessionAttribute("userId") Long userId) {
+            @SessionAttribute("user") Long userId) {
         commentService.deleteComment(userId, commentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponseDto.success(SuccessCode.COMMENT_DELETE_SUCCESS, "/api/comments/" + commentId));
     }
@@ -55,7 +55,7 @@ public class CommentController {
     @PostMapping("/{commentId}/like")
     public ResponseEntity<ApiResponseDto<Void>> addCommentLike(
             @PathVariable Long commentId,
-            @SessionAttribute("userId") Long userId) {
+            @SessionAttribute("user") Long userId) {
         commentService.addCommentLike(userId, commentId);
         return ResponseEntity.ok(ApiResponseDto.success(SuccessCode.COMMENT_LIKE_SUCCESS, "/api/comments/" + commentId + "/like"));
     }
@@ -63,7 +63,7 @@ public class CommentController {
     @DeleteMapping("/{commentId}/like")
     public ResponseEntity<ApiResponseDto<Void>> removeCommentLike(
             @PathVariable Long commentId,
-            @SessionAttribute("userId") Long userId) {
+            @SessionAttribute("user") Long userId) {
         commentService.removeCommentLike(userId, commentId);
         return ResponseEntity.ok(ApiResponseDto.success(SuccessCode.COMMENT_UNLIKE_SUCCESS, "/api/comments/" + commentId + "/like"));
     }
