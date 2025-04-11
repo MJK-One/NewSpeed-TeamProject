@@ -4,6 +4,8 @@ import com.newspeed.newspeed.domain.comments.dto.request.*;
 import com.newspeed.newspeed.domain.comments.dto.response.CommentResponseDto;
 import com.newspeed.newspeed.domain.comments.entity.*;
 import com.newspeed.newspeed.domain.comments.repository.*;
+import com.newspeed.newspeed.domain.post.entity.Post;
+import com.newspeed.newspeed.domain.post.repository.PostRepository;
 import com.newspeed.newspeed.domain.users.entity.User;
 import com.newspeed.newspeed.domain.users.repository.UserRepository;
 import jakarta.transaction.Transactional;
