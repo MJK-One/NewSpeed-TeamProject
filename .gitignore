@@ -39,3 +39,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# 로컬 개발자용 설정 제외
+application-local.properties
+
