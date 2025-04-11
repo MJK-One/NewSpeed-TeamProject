@@ -25,20 +25,29 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponseDto<Void>> createUser(
-            @RequestBody @Valid final UserSignupRequestDto userSignupRequestDto,
-            HttpServletRequest httpServletRequest) {
-        userService.signup(userSignupRequestDto, httpServletRequest);
+            @RequestBody @Valid final UserSignupRequestDto userSignupRequestDto
+    ) {
+        userService.signup(userSignupRequestDto);
+
         return ResponseEntity.status(201)
-                .body(ApiResponseDto.success(SuccessCode.USER_SIGNUP_SUCCESS, "/api/users/singnup"));
+                .body(ApiResponseDto.success(SuccessCode.USER_SIGNUP_SUCCESS, "/api/users/signup"));
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponseDto<Void>> login(
             @RequestBody @Valid final UserLoginRequestDto userLoginRequestDto,
-            HttpServletRequest httpServletRequest) {
-        userService.login(userLoginRequestDto, httpServletRequest);
+            HttpServletRequest request
+    ) {
+        User user = userService.login(userLoginRequestDto); // 로그인 검증만 수행
+
+        // 세션 저장
+        HttpSession session = request.getSession(true);
+        session.setAttribute("user", user);
+
         return ResponseEntity.ok(ApiResponseDto.success(SuccessCode.USER_LOGIN_SUCCESS, "/api/users/login"));
     }
+
 
     @DeleteMapping
     public ResponseEntity<Void> deleteUser(
